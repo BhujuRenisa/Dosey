@@ -87,7 +87,6 @@ fun ForgotPasswordBody() {
         ) {
             Spacer(modifier = Modifier.height(60.dp))
 
-            // --- Icon ---
             Icon(
                 painter = painterResource(R.drawable.outline_lock_reset_24),
                 contentDescription = "Reset Password Icon",
@@ -97,7 +96,6 @@ fun ForgotPasswordBody() {
 
             Spacer(modifier = Modifier.height(30.dp))
 
-            // --- Header Text ---
             Text(
                 "Reset Your Password",
                 modifier = Modifier.fillMaxWidth(),
@@ -120,7 +118,7 @@ fun ForgotPasswordBody() {
 
             Spacer(modifier = Modifier.height(30.dp))
 
-            // --- Email Field ---
+            // Email Field
             OutlinedTextField(
                 value = email,
                 onValueChange = { data -> email = data },
@@ -188,7 +186,7 @@ fun ForgotPasswordBody() {
             }
             Spacer(modifier = Modifier.height(16.dp))
 
-            // --- Back to Login ---
+            //Back to Login
             Button(
                 onClick = { activity.finish() },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),

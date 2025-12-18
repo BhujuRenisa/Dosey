@@ -194,7 +194,7 @@ fun DoseyLoginBody() {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Forgot Password Text
+            // Forgot Password
             Text(
                 "Forgot Password?",
                 modifier = Modifier
@@ -260,7 +260,7 @@ fun DoseyLoginBody() {
 
             Spacer(modifier = Modifier.weight(1f))
 
-            // SIGN UP LINK
+            // SIGN UP
             Row(
                 modifier = Modifier
                     .padding(bottom = 32.dp) // Gives some space from the bottom edge

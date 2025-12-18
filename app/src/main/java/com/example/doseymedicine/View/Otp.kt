@@ -51,7 +51,7 @@ fun OTPBody() {
                 .padding(padding)
                 .background(
                     Brush.verticalGradient(
-                        listOf(Color(0xFFF3E5F5), Color(0xFFE8F5E9)) // Dosey Soft Gradient
+                        listOf(Color(0xFFF3E5F5), Color(0xFFE8F5E9))
                     )
                 ),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -178,7 +178,6 @@ fun OTPBody() {
                     color = PrimaryPurple,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.clickable {
-                        // Trigger Resend Logic here
                     }
                 )
             }

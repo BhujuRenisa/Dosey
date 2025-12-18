@@ -63,7 +63,7 @@ fun NewPassBody() {
         ) {
             Spacer(modifier = Modifier.height(60.dp))
 
-            // --- HEADER ---
+            // HEADER
             Text(
                 "Create New Password",
                 modifier = Modifier
@@ -111,7 +111,7 @@ fun NewPassBody() {
 
             Spacer(modifier = Modifier.height(25.dp))
 
-            // CONFIRM PASSWORD INPUT
+            // CONFIRM PASSWORD
             InputFieldLabel("Confirm Password")
             OutlinedTextField(
                 value = confirmPassword,
@@ -136,9 +136,8 @@ fun NewPassBody() {
                     } else if (password != confirmPassword) {
                         Toast.makeText(context, "Passwords do not match", Toast.LENGTH_SHORT).show()
                     } else {
-                        // Logic to update password in ViewModel/Repo
                         Toast.makeText(context, "Password Updated Successfully", Toast.LENGTH_SHORT).show()
-                        activity.finish() // Go back to login
+                        activity.finish()
                     }
                 },
                 modifier = Modifier

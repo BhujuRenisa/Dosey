@@ -43,6 +43,18 @@ class DashboardActivity : ComponentActivity() {
     }
 }
 
+data class MedInfo(
+    val name: String, val desc: String, val time: String,
+    val icon: Int, val iconBg: Color, val iconTint: Color,
+    val timeColor: Color = Color(0xFF4CAF50), val isTakeable: Boolean = true
+)
+
+fun getMedications() = listOf(
+    MedInfo("Vitamin D3", "1000IU • Once daily", "12:00 PM", R.drawable.outline_sunny_24, Color(0xFFFFF9C4), Color(0xFFFFB300)),
+    MedInfo("Lisinopril", "10mg • Before bed", "8:00 PM", R.drawable.outline_water_drop_24, Color(0xFFE3F2FD), Color(0xFF2196F3)),
+    MedInfo("Metformin", "500mg • With dinner", "Tomorrow", R.drawable.outline_medication_24, Color(0xFFEEEEEE), Color(0xFF757575), Color.Gray, false)
+)
+
 @Composable
 fun DashboardBody() {
     val context = LocalContext.current
@@ -77,7 +89,7 @@ fun DashboardBody() {
                 .padding(padding),
             contentPadding = PaddingValues(20.dp)
         ) {
-            //  TOP PROFILE SECTION
+            //  Top profile pic
             item {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -129,7 +141,7 @@ fun DashboardBody() {
                 }
             }
 
-            //  DUE NOW SECTION
+            //  Duenow
             item {
                 Spacer(modifier = Modifier.height(30.dp))
                 Row(
@@ -148,7 +160,7 @@ fun DashboardBody() {
                 }
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // CRITICAL CARD
+                // Critical Card
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(containerColor = Color(0xFF1A0A0A)),
@@ -278,14 +290,3 @@ fun UpcomingMedCard(med: MedInfo) {
         }
     }
 }
-data class MedInfo(
-    val name: String, val desc: String, val time: String,
-    val icon: Int, val iconBg: Color, val iconTint: Color,
-    val timeColor: Color = Color(0xFF4CAF50), val isTakeable: Boolean = true
-)
-
-fun getMedications() = listOf(
-    MedInfo("Vitamin D3", "1000IU • Once daily", "12:00 PM", R.drawable.outline_sunny_24, Color(0xFFFFF9C4), Color(0xFFFFB300)),
-    MedInfo("Lisinopril", "10mg • Before bed", "8:00 PM", R.drawable.outline_water_drop_24, Color(0xFFE3F2FD), Color(0xFF2196F3)),
-    MedInfo("Metformin", "500mg • With dinner", "Tomorrow", R.drawable.outline_medication_24, Color(0xFFEEEEEE), Color(0xFF757575), Color.Gray, false)
-)

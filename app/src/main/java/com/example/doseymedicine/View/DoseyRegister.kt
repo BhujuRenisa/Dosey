@@ -53,7 +53,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-// VVVV IMPORTANT IMPORTS: ADJUST THESE BASED ON YOUR PROJECT STRUCTURE VVVV
 import com.example.doseymedicine.R
 import com.example.doseymedicine.viewmodel.DoseyViewModel
 import com.example.doseymedicine.Respo.AuthRepoImpl
@@ -61,7 +60,6 @@ import com.example.doseymedicine.ui.theme.PrimaryPurple
 import com.example.doseymedicine.ui.theme.SoftPurple
 import com.example.doseymedicine.ui.theme.DarkText
 import com.example.doseymedicine.ui.theme.White
-// VVVV END OF IMPORTS VVVV
 
 class DoseyRegister : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,7 +86,6 @@ fun RegisterBody(){
     val context = LocalContext.current
     val activity = context as Activity
 
-    // Note: Calendar/selectedDate variables are defined but not used in the final UI logic.
 
     Scaffold { padding ->
         Column (
@@ -106,7 +103,6 @@ fun RegisterBody(){
         {
             Spacer(modifier = Modifier .height(40 .dp))
 
-            // --- Icon / Header ---
             Box(
                 modifier = Modifier
                     .size(120.dp)
@@ -148,12 +144,11 @@ fun RegisterBody(){
                 modifier = Modifier .padding(vertical = 20.dp)
             )
 
-            // --- INPUT FIELDS ---
             val fieldModifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp)
 
-            // First Name Field
+            // First Name
             OutlinedTextField(
                 value = firstName,
                 onValueChange = { data -> firstName = data },
@@ -170,7 +165,7 @@ fun RegisterBody(){
             )
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Last Name Field
+            // Last Name
             OutlinedTextField(
                 value = lastName,
                 onValueChange = { data -> lastName = data },
@@ -236,7 +231,7 @@ fun RegisterBody(){
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // --- Checkbox ---
+            // Checkbox
             Row (
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically

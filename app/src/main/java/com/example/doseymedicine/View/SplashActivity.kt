@@ -57,8 +57,8 @@ fun DoseySplashScreen() {
             .background(
                 Brush.verticalGradient(
                     listOf(
-                        Color(0xFFF3E5F5), // Soft Purple
-                        Color(0xFFE8F5E9)  // Soft Green
+                        Color(0xFFF3E5F5),
+                        Color(0xFFE8F5E9)
                     )
                 )
             ),
