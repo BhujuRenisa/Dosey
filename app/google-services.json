@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "280737956720",
+    "project_id": "doseytracker",
+    "storage_bucket": "doseytracker.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:280737956720:android:8200a660710510119b85b5",
+        "android_client_info": {
+          "package_name": "com.example.doseymedicine"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1HINUCMpb330Ek_hO4llZLpe5xlEFINM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
