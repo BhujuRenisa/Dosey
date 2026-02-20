@@ -1,4 +1,4 @@
-package com.example.doseymedicine.View
+package com.example.doseymedicine.view
 
 import android.content.Intent
 import android.os.Bundle
@@ -50,7 +50,7 @@ data class MedInfo(
 )
 
 fun getMedications() = listOf(
-    MedInfo("Vitamin D3", "1000IU • Once daily", "12:00 PM", R.drawable.outline_sunny_24, Color(0xFFFFF9C4), Color(0xFFFFB300)),
+    MedInfo("Vitamin D3", "1000IU 5• Once daily", "12:00 PM", R.drawable.outline_sunny_24, Color(0xFFFFF9C4), Color(0xFFFFB300)),
     MedInfo("Lisinopril", "10mg • Before bed", "8:00 PM", R.drawable.outline_water_drop_24, Color(0xFFE3F2FD), Color(0xFF2196F3)),
     MedInfo("Metformin", "500mg • With dinner", "Tomorrow", R.drawable.outline_medication_24, Color(0xFFEEEEEE), Color(0xFF757575), Color.Gray, false)
 )

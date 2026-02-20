@@ -1,6 +1,6 @@
-package com.example.doseymedicine.Respo
+package com.example.doseymedicine.respo
 
-import com.example.doseymedicine.Model.DoseyModel
+import com.example.doseymedicine.model.DoseyModel
 
 interface AuthRepo {
 

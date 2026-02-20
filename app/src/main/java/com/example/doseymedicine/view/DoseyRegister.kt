@@ -1,13 +1,13 @@
-package com.example.doseymedicine.View
+package com.example.doseymedicine.view
 
 import android.app.Activity
 import android.content.Intent
-import android.icu.util.Calendar
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -51,11 +51,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.doseymedicine.R
 import com.example.doseymedicine.viewmodel.DoseyViewModel
-import com.example.doseymedicine.Respo.AuthRepoImpl
+import com.example.doseymedicine.respo.AuthRepoImpl
 import com.example.doseymedicine.ui.theme.PrimaryPurple
 import com.example.doseymedicine.ui.theme.SoftPurple
 import com.example.doseymedicine.ui.theme.DarkText
@@ -115,11 +116,10 @@ fun RegisterBody(){
                     .border(1.dp, Color(0xFFD1C4E9), CircleShape),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    painter = painterResource(R.drawable.outline_person_24),
-                    contentDescription = "User Icon",
-                    modifier = Modifier.size(80.dp),
-                    tint = PrimaryPurple
+                Image(
+                        painter = painterResource(id = R.drawable.doseycharacterbgremoved),
+                        contentDescription = "Dosey Character",
+                        modifier = Modifier.size(90.dp)
                 )
             }
 
@@ -135,7 +135,7 @@ fun RegisterBody(){
                     fontWeight = FontWeight.Bold
                 )
             )
-            Text("Join our platform to browse products and track your orders.",
+            Text("Join our platform to track your pill and manage your health.",
                 style = TextStyle(
                     textAlign = TextAlign.Center,
                     color = DarkText.copy(0.7f),
@@ -313,14 +313,25 @@ fun RegisterBody(){
             Spacer(modifier = Modifier.height(16.dp))
 
             // Link to Login Screen
-            TextButton(onClick = {
-                activity.finish()
-            }) {
+            Row(
+                modifier = Modifier
+                    .padding(bottom = 32.dp)
+                    .clickable {
+                        context.startActivity(Intent(context, LoginScreen::class.java))
+                    },
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Text(
-                    text = "Already have an account? Sign In",
+                    text = "Already have an account? ",
+                    color = DarkText,
+                    fontSize = 15.sp
+                )
+                Text(
+                    text = "log In",
                     color = PrimaryPurple,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Bold,
+                    textDecoration = TextDecoration.Underline
                 )
             }
         }

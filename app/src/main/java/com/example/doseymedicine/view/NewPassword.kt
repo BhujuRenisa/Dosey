@@ -1,4 +1,4 @@
-package com.example.doseymedicine.View
+package com.example.doseymedicine.view
 
 import android.app.Activity
 import android.os.Bundle

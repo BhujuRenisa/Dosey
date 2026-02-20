@@ -1,9 +1,9 @@
 package com.example.doseymedicine.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.example.doseymedicine.Model.DoseyModel
-import com.example.doseymedicine.Respo.AuthRepo
-import com.example.doseymedicine.Respo.AuthRepoImpl
+import com.example.doseymedicine.model.DoseyModel
+import com.example.doseymedicine.respo.AuthRepo
+import com.example.doseymedicine.respo.AuthRepoImpl
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.State
 

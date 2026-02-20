@@ -1,4 +1,4 @@
-package com.example.doseymedicine.View
+package com.example.doseymedicine.view
 
 import android.app.Activity
 import android.content.Intent
@@ -50,13 +50,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.doseymedicine.Respo.AuthRepoImpl
+import com.example.doseymedicine.respo.AuthRepoImpl
 import com.example.doseymedicine.R
-import com.example.doseymedicine.viewmodel.DoseyViewModel
-import com.example.doseymedicine.View.ForgotPassword
+import com.example.doseymedicine.ui.theme.DarkText
 import com.example.doseymedicine.ui.theme.PrimaryPurple
 import com.example.doseymedicine.ui.theme.SoftPurple
-import com.example.doseymedicine.ui.theme.DarkText
+import com.example.doseymedicine.view.DoseyRegister
+import com.example.doseymedicine.viewmodel.DoseyViewModel
+import com.example.doseymedicine.view.ForgotPassword
 
 class LoginScreen : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

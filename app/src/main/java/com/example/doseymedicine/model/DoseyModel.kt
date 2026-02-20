@@ -1,4 +1,4 @@
-package com.example.doseymedicine.Model
+package com.example.doseymedicine.model
 
 data class DoseyModel(
     val id: String = "",

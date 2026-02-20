@@ -1,4 +1,4 @@
-package com.example.doseymedicine.View
+package com.example.doseymedicine.view
 
 import android.app.Activity
 import android.content.Intent
@@ -21,7 +21,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -33,7 +32,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -46,12 +44,10 @@ import androidx.compose.ui.unit.sp
 
 import com.example.doseymedicine.R
 import com.example.doseymedicine.viewmodel.DoseyViewModel
-import com.example.doseymedicine.Respo.AuthRepoImpl
+import com.example.doseymedicine.respo.AuthRepoImpl
 import com.example.doseymedicine.ui.theme.PrimaryPurple
 import com.example.doseymedicine.ui.theme.SoftPurple
 import com.example.doseymedicine.ui.theme.DarkText
-import com.example.doseymedicine.ui.theme.White
-import com.example.doseymedicine.View.LoginScreen
 
 class ForgotPassword : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -150,9 +146,14 @@ fun ForgotPasswordBody() {
                         if (success) {
                             Toast.makeText(context, "Reset link sent to $email", Toast.LENGTH_LONG).show()
 
-                            val intent = Intent(context, Otp::class.java)
-                            context.startActivity(intent)
-//                            activity.finish()
+                            viewModel.forgotPassword(email.trim()) { success, message ->
+                                if (success) {
+                                    Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+                                    activity.finish() // Go back to login screen
+                                } else {
+                                    Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+                                }
+                            }
                         } else {
                             Toast.makeText(context, message, Toast.LENGTH_LONG).show()
                         }

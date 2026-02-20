@@ -1,7 +1,6 @@
-package com.example.doseymedicine.Respo
+package com.example.doseymedicine.respo
 
-import com.example.doseymedicine.Model.DoseyModel
-import com.google.firebase.Firebase
+import com.example.doseymedicine.model.DoseyModel
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -13,20 +12,20 @@ import com.google.firebase.database.ValueEventListener
 
 
 class AuthRepoImpl : AuthRepo {
-    val auth: FirebaseAuth= FirebaseAuth.getInstance()
-    val database: FirebaseDatabase= FirebaseDatabase.getInstance()
-    val ref: DatabaseReference= database.getReference("Users")
+    val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    val database: FirebaseDatabase = FirebaseDatabase.getInstance()
+    val ref: DatabaseReference = database.getReference("Users")
     override fun login(
         email: String,
         password: String,
         callback: (Boolean, String) -> Unit
     ) {
-        auth.signInWithEmailAndPassword(email,password)
+        auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener {
-                if(it.isSuccessful){
-                    callback(true,"Login sucess")
-                }else{
-                    callback(false,"${it.exception?.message}")
+                if (it.isSuccessful) {
+                    callback(true, "Login sucess")
+                } else {
+                    callback(false, "${it.exception?.message}")
                 }
             }
     }
@@ -71,10 +70,10 @@ class AuthRepoImpl : AuthRepo {
     ) {
         auth.sendPasswordResetEmail(email)
             .addOnCompleteListener {
-                if(it.isSuccessful){
-                    callback(true,"Reset email sent to $email")
-                }else{
-                    callback(false,"${it.exception?.message}")
+                if (it.isSuccessful) {
+                    callback(true, "Reset email sent to $email")
+                } else {
+                    callback(false, "${it.exception?.message}")
                 }
             }
     }
@@ -84,7 +83,7 @@ class AuthRepoImpl : AuthRepo {
         callback: (Boolean, String) -> Unit
     ) {
         ref.child(userId).removeValue()
-                    .addOnCompleteListener {
+            .addOnCompleteListener {
                 if (it.isSuccessful) {
                     auth.currentUser?.delete()
                     callback(true, "Account deleted successfully")
@@ -100,7 +99,7 @@ class AuthRepoImpl : AuthRepo {
         callback: (Boolean, String) -> Unit
     ) {
         ref.child(userId).updateChildren(model.toMap())
-                    .addOnCompleteListener {
+            .addOnCompleteListener {
                 if (it.isSuccessful) {
                     callback(true, "Profile updated successfully")
                 } else {
@@ -108,6 +107,7 @@ class AuthRepoImpl : AuthRepo {
                 }
             }
     }
+
     override fun getUserById(
         userId: String,
         callback: (Boolean, String, DoseyModel?) -> Unit
