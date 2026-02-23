@@ -13,7 +13,7 @@
         android:theme="@style/Theme.DoseyMedicine">
 
         <activity
-            android:name=".view.SplashActivity"
+            android:name=".view.DashboardActivity"
             android:exported="true"
             android:label="@string/title_activity_splash">
             <intent-filter>
@@ -24,7 +24,7 @@
 
         <activity android:name=".view.AddMedicine" android:exported="false" />
         <activity android:name=".view.NewPassword" android:exported="false" />
-        <activity android:name=".view.DashboardActivity" android:exported="false" />
+        <activity android:name=".view.SplashActivity" android:exported="false" />
         <activity android:name=".view.ForgotPassword" android:exported="false" />
         <activity android:name=".view.DoseyRegister" android:exported="false" />
         <activity android:name=".view.LoginScreen" android:exported="false" />

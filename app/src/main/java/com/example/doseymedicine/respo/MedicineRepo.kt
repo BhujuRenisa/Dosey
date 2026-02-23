@@ -1,0 +1,19 @@
+package com.example.doseymedicine.respo
+
+import com.example.doseymedicine.model.MedicineModel
+
+interface MedicineRepo {
+    fun addMedicine(
+        medicine: MedicineModel,
+        callback: (Boolean, String) -> Unit
+    )
+
+    fun getMedicines(
+        callback: (List<MedicineModel>) -> Unit
+    )
+
+    fun markTaken(
+        medicineId: String,
+        callback: (Boolean) -> Unit
+    )
+}

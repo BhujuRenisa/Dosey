@@ -61,8 +61,9 @@ dependencies { // <--- THIS IS THE ONLY LOCATION FOR THIS BLOCK
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
-
-    // TESTING LIBRARIES
+    implementation(libs.androidx.compose.runtime.livedata)
+    implementation(libs.androidx.compose.remote.creation.core)
+    implementation("androidx.compose.foundation:foundation")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -70,6 +71,9 @@ dependencies { // <--- THIS IS THE ONLY LOCATION FOR THIS BLOCK
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.compose.runtime.livedata)
 
 
 
