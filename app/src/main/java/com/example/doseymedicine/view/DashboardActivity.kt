@@ -30,6 +30,7 @@ import com.example.doseymedicine.ui.theme.PrimaryPurple
 import com.example.doseymedicine.ui.theme.SoftPurple
 import com.example.doseymedicine.viewmodel.MedicineViewModel
 import com.example.doseymedicine.R
+import com.google.firebase.auth.FirebaseAuth
 
 
 class DashboardActivity : ComponentActivity() {
@@ -53,13 +54,11 @@ fun Dashboard(viewModel: MedicineViewModel) {
     val icons = listOf(Icons.Default.Home, Icons.Default.DateRange, Icons.Default.Person)
 
     var isAddingMedicine by remember { mutableStateOf(false) }
+    var selectedMedicineId by remember { mutableStateOf<String?>(null) }
 
-    // Your preferred standard color scheme
     val gradientBackground = Brush.verticalGradient(
         colors = listOf(Color(0xFFC8E6F0), Color(0xFFDCDAF0))
     )
-
-    var selectedMedicineId by remember { mutableStateOf<String?>(null) }
 
     Box(
         modifier = Modifier
@@ -69,10 +68,9 @@ fun Dashboard(viewModel: MedicineViewModel) {
         Scaffold(
             containerColor = Color.Transparent,
             bottomBar = {
-                // Only show bottom bar when not adding a medicine
-                if (!isAddingMedicine) {
+                if (!isAddingMedicine && selectedMedicineId == null) {
                     NavigationBar(
-                        containerColor = Color.White.copy(alpha = 0.8f) // Slight transparency for a modern look
+                        containerColor = Color.White.copy(alpha = 0.8f)
                     ) {
                         labels.forEachIndexed { index, label ->
                             NavigationBarItem(
@@ -90,18 +88,14 @@ fun Dashboard(viewModel: MedicineViewModel) {
                 }
             }
         ) { paddingValues ->
-            // Use standard padding from the Scaffold
             Box(modifier = Modifier.padding(paddingValues)) {
-
                 when {
                     selectedMedicineId != null -> {
-                        selectedMedicineId?.let { id ->
-                            MedicineDetailsScreen(
-                                viewModel =viewModel,
-                                medicineId = id,
-                                onBack = { selectedMedicineId = null }
-                            )
-                        }
+                        MedicineDetailsScreen(
+                            viewModel = viewModel,
+                            medicineId = selectedMedicineId!!,
+                            onBack = { selectedMedicineId = null }
+                        )
                     }
 
                     isAddingMedicine -> {
@@ -116,12 +110,15 @@ fun Dashboard(viewModel: MedicineViewModel) {
                             0 -> HomeScreen(
                                 viewModel = viewModel,
                                 onNavigateToAdd = { isAddingMedicine = true },
-                                onNavigateToDetails = { id ->
-                                    selectedMedicineId = id
-                                }
+                                onNavigateToDetails = { id -> selectedMedicineId = id }
                             )
                             1 -> History()
-                            2 -> Profile()
+                            2 -> Profile(
+                                viewModel = viewModel,
+                                onLogout = {
+                                    FirebaseAuth.getInstance().signOut()
+                                }
+                            )
                         }
                     }
                 }
