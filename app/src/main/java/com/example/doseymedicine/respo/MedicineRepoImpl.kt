@@ -53,17 +53,32 @@ class MedicineRepoImpl: MedicineRepo {
             })
     }
 
+//    Decrease pill acutomatically
     override fun markTaken(medicineId: String, callback: (Boolean) -> Unit) {
         val uid = auth.currentUser?.uid ?: return
 
-        database.child("medicines")
+        val medRef = database.child("medicines")
             .child(uid)
             .child(medicineId)
-            .child("taken")
-            .setValue(true)
-            .addOnCompleteListener {
-                callback(it.isSuccessful)
+
+        medRef.get().addOnSuccessListener { snapshot ->
+            val med = snapshot.getValue(MedicineModel::class.java)
+
+            if (med != null && med.pillsLeft > 0) {
+
+                val updates = mapOf(
+                    "taken" to true,
+                    "pillsLeft" to med.pillsLeft - 1
+                )
+
+                medRef.updateChildren(updates)
+                    .addOnCompleteListener {
+                        callback(it.isSuccessful)
+                    }
+            } else {
+                callback(false)
             }
+        }
     }
 
     override fun getMedicineById(
@@ -85,5 +100,21 @@ class MedicineRepoImpl: MedicineRepo {
                     callback(null)
                 }
             })
+    }
+
+    override fun updateMedicine(
+        medicineId: String,
+        updatedMed: MedicineModel,
+        callback: (Boolean) -> Unit
+    ) {
+        val uid = auth.currentUser?.uid ?: return
+
+        database.child("medicines")
+            .child(uid)
+            .child(medicineId)
+            .setValue(updatedMed)
+            .addOnCompleteListener {
+                callback(it.isSuccessful)
+            }
     }
 }

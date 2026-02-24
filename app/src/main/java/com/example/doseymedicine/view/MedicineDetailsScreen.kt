@@ -1,5 +1,10 @@
 package com.example.doseymedicine.view
 
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -103,6 +108,7 @@ fun MedicineDetailsScreen(
             DetailItem(label = "Frequency", value = med.frequency)
             DetailItem(label = "Start Date", value = med.startDate)
             DetailItem(label = "End Date", value = med.endDate)
+            DetailItem(label = "Dosage", value = med.dosage)
 
             Spacer(Modifier.height(16.dp))
 
@@ -141,20 +147,41 @@ fun MedicineDetailsScreen(
 
             // Low stock warning ⭐
             if (med.pillsLeft <= 5) {
-                Card(
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color(0xFFFFEBEE)
+
+                val infiniteTransition = rememberInfiniteTransition(label = "alert")
+
+                val alpha by infiniteTransition.animateFloat(
+                    initialValue = 0.4f,
+                    targetValue = 1f,
+                    animationSpec = infiniteRepeatable(
+                        animation = tween(800),
+                        repeatMode = RepeatMode.Reverse
                     ),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = "⚠ Low medicine stock! Please refill.",
-                        color = Color.Red,
-                        modifier = Modifier.padding(16.dp),
-                        fontWeight = FontWeight.Bold
-                    )
-                }
+                    label = "alpha"
+                )
+
+                Text(
+                    text = "⚠ Low Medicine Stock! Refill Soon",
+                    color = Color.Red.copy(alpha = alpha),
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(top = 12.dp)
+                )
             }
+//            if (med.pillsLeft <= 5) {
+//                Card(
+//                    colors = CardDefaults.cardColors(
+//                        containerColor = Color(0xFFFFEBEE)
+//                    ),
+//                    modifier = Modifier.fillMaxWidth()
+//                ) {
+//                    Text(
+//                        text = "⚠ Low medicine stock! Please refill.",
+//                        color = Color.Red,
+//                        modifier = Modifier.padding(16.dp),
+//                        fontWeight = FontWeight.Bold
+//                    )
+//                }
+//            }
         }
     }
 }

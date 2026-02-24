@@ -17,11 +17,29 @@ class MedicineViewModel : ViewModel() {
         }
     }
 
-    fun addMedicine(name: String, desc: String, time: String, onResult: (Boolean, String) -> Unit) {
+    fun addMedicine(
+        name: String,
+        desc: String,
+        dosage: String,
+        time: String,
+        frequency: String,
+        startDate: String,
+        endDate: String,
+        totalPills: Int,
+        pillsLeft: Int,
+        onResult: (Boolean, String) -> Unit
+    ) {
+
         val newMed = MedicineModel(
             name = name,
             desc = desc,
+            dosage = dosage,
             time = time,
+            frequency = frequency,
+            startDate = startDate,
+            endDate = endDate,
+            totalPills = totalPills,
+            pillsLeft = pillsLeft,
             taken = false
         )
 
@@ -42,5 +60,19 @@ class MedicineViewModel : ViewModel() {
         callback: (MedicineModel?) -> Unit
     ) {
         repo.getMedicineById(id, callback)
+    }
+
+//    edit
+fun updateMedicine(
+    medicineId: String,
+    medicine: MedicineModel,
+    callback: (Boolean) -> Unit)
+{
+        repo.updateMedicine(medicineId, medicine)
+        {
+            if (it) loadMedicines()
+            callback(it)
+        }
+
     }
 }

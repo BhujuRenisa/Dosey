@@ -22,4 +22,10 @@ interface MedicineRepo {
         callback: (MedicineModel?) -> Unit
     )
 
+//    Edit medicine feature
+fun updateMedicine(
+    medicineId: String,
+    updatedMed: MedicineModel,
+    callback: (Boolean) -> Unit
+)
 }
