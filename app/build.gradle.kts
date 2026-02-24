@@ -64,6 +64,7 @@ dependencies { // <--- THIS IS THE ONLY LOCATION FOR THIS BLOCK
     implementation(libs.androidx.compose.runtime.livedata)
     implementation(libs.androidx.compose.remote.creation.core)
     implementation("androidx.compose.foundation:foundation")
+    implementation(libs.androidx.compose.runtime)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -16,4 +16,10 @@ interface MedicineRepo {
         medicineId: String,
         callback: (Boolean) -> Unit
     )
+
+    fun getMedicineById(
+        medicineId: String,
+        callback: (MedicineModel?) -> Unit
+    )
+
 }

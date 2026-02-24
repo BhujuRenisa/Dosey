@@ -17,11 +17,30 @@ class MedicineViewModel : ViewModel() {
         }
     }
 
-    fun addMedicine(medicine: MedicineModel, callback: (Boolean, String) -> Unit) {
-        repo.addMedicine(medicine, callback)
+    fun addMedicine(name: String, desc: String, time: String, onResult: (Boolean, String) -> Unit) {
+        val newMed = MedicineModel(
+            name = name,
+            desc = desc,
+            time = time,
+            taken = false
+        )
+
+        repo.addMedicine(newMed) { success, message ->
+            if (success) {
+                loadMedicines()
+            }
+            onResult(success, message)
+        }
     }
 
     fun markTaken(id: String) {
         repo.markTaken(id) { loadMedicines() }
+    }
+
+    fun getMedicineById(
+        id: String,
+        callback: (MedicineModel?) -> Unit
+    ) {
+        repo.getMedicineById(id, callback)
     }
 }

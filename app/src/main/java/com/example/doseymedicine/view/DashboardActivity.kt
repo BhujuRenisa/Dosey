@@ -5,7 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -19,6 +21,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -49,58 +52,79 @@ fun Dashboard(viewModel: MedicineViewModel) {
     val labels = listOf("Home", "History", "Profile")
     val icons = listOf(Icons.Default.Home, Icons.Default.DateRange, Icons.Default.Person)
 
-    Scaffold(
-//        topBar = {
-//            TopAppBar(
-//                colors = TopAppBarDefaults.topAppBarColors(
-//                    containerColor = PrimaryPurple,
-//                    titleContentColor = SoftPurple
-//                ),
-//                title = { Text("Dosey")},
-//                navigationIcon = {
-//                    IconButton(onClick = { }) {
-//                        Icon(
-//                            painter = painterResource(R.drawable.outline_arrow_back_24),
-//                            contentDescription = "Back",
-//                            tint = Color.White
-//                        )
-//                    }
-//                },
-//                actions = {
-//                    Image(
-//                        painter = painterResource(id = R.drawable.doseycharacterbgremoved),
-//                        contentDescription = "Logo",
-//                        modifier = Modifier
-//                            .size(115.dp)
-//                            .padding(end = 6.dp)
-//                            .clip(CircleShape)
-//                    )
-//                }
-//
-//            )
-//        },
-        bottomBar = {
-            NavigationBar(containerColor = Color.White) {
-                labels.forEachIndexed { index, label ->
-                    NavigationBarItem(
-                        selected = selectedIndex == index,
-                        onClick = { selectedIndex = index },
-                        label = { Text(label) },
-                        icon = { Icon(icons[index], contentDescription = label) },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = PrimaryPurple,
-                            indicatorColor = PrimaryPurple.copy(alpha = 0.1f)
-                        )
-                    )
+    var isAddingMedicine by remember { mutableStateOf(false) }
+
+    // Your preferred standard color scheme
+    val gradientBackground = Brush.verticalGradient(
+        colors = listOf(Color(0xFFC8E6F0), Color(0xFFDCDAF0))
+    )
+
+    var selectedMedicineId by remember { mutableStateOf<String?>(null) }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(gradientBackground)
+    ) {
+        Scaffold(
+            containerColor = Color.Transparent,
+            bottomBar = {
+                // Only show bottom bar when not adding a medicine
+                if (!isAddingMedicine) {
+                    NavigationBar(
+                        containerColor = Color.White.copy(alpha = 0.8f) // Slight transparency for a modern look
+                    ) {
+                        labels.forEachIndexed { index, label ->
+                            NavigationBarItem(
+                                selected = selectedIndex == index,
+                                onClick = { selectedIndex = index },
+                                label = { Text(label) },
+                                icon = { Icon(icons[index], contentDescription = label) },
+                                colors = NavigationBarItemDefaults.colors(
+                                    selectedIconColor = PrimaryPurple,
+                                    indicatorColor = PrimaryPurple.copy(alpha = 0.1f)
+                                )
+                            )
+                        }
+                    }
                 }
             }
-        }
-    ) { paddingValues ->
-        Box(modifier = Modifier.padding(paddingValues)) {
-            when (selectedIndex) {
-                0 -> HomeScreen(viewModel)
-                1 -> Box { Text("History Archive Coming Soon") }
-                2 -> Box { Text("Profile Settings Coming Soon") }
+        ) { paddingValues ->
+            // Use standard padding from the Scaffold
+            Box(modifier = Modifier.padding(paddingValues)) {
+
+                when {
+                    selectedMedicineId != null -> {
+                        selectedMedicineId?.let { id ->
+                            MedicineDetailsScreen(
+                                viewModel =viewModel,
+                                medicineId = id,
+                                onBack = { selectedMedicineId = null }
+                            )
+                        }
+                    }
+
+                    isAddingMedicine -> {
+                        AddMedicineScreen(
+                            viewModel = viewModel,
+                            onBack = { isAddingMedicine = false }
+                        )
+                    }
+
+                    else -> {
+                        when (selectedIndex) {
+                            0 -> HomeScreen(
+                                viewModel = viewModel,
+                                onNavigateToAdd = { isAddingMedicine = true },
+                                onNavigateToDetails = { id ->
+                                    selectedMedicineId = id
+                                }
+                            )
+                            1 -> History()
+                            2 -> Profile()
+                        }
+                    }
+                }
             }
         }
     }

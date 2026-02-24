@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -16,8 +17,12 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -25,93 +30,118 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.doseymedicine.R
 import com.example.doseymedicine.model.MedicineModel
+import com.example.doseymedicine.ui.theme.DarkText
+import com.example.doseymedicine.ui.theme.DoseyPurple
+import com.example.doseymedicine.ui.theme.MutedText
+import com.example.doseymedicine.ui.theme.Purple80
+import com.example.doseymedicine.ui.theme.doseyText
 import com.example.doseymedicine.viewmodel.MedicineViewModel
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-val DeepNavyBackground = Color(0xFF12141C)
 val SurfaceCardDark = Color(0xFF1E212D)
-val DoseyPurple = Color(0xFF9883E5)
-val PurplePinkAccent = Color(0xFFE583D2)
-val TextMuted = Color(0xFF9496A1)
-val White = Color(0xFFFFFFFF)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(viewModel: MedicineViewModel) {
+fun HomeScreen(viewModel: MedicineViewModel,onNavigateToAdd: () -> Unit ,
+               onNavigateToDetails: (String) -> Unit) {
     val medicineList by viewModel.medicines.observeAsState(initial = emptyList())
     var selectedDate by remember { mutableStateOf(Calendar.getInstance().time) }
 
     LaunchedEffect(Unit) {
         viewModel.loadMedicines()
     }
-
-    Scaffold(
-        containerColor = DeepNavyBackground,
-        topBar = {
-            CenterAlignedTopAppBar(
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color.Transparent
-                ),
-                title = {
-                    Text("My Medications", color = White, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
-                },
-                navigationIcon = {
-                    IconButton(onClick = {}) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = null, tint = White)
-                    }
-                },
-                actions = {
-                    Box(modifier = Modifier.padding(end = 16.dp)) {
-                        Image(
-                            painter = painterResource(id = R.drawable.doseycharacterbgremoved),
-                            contentDescription = "Logo",
-                            modifier = Modifier
-                                .size(42.dp)
-                                .clip(CircleShape)
-                                .background(SurfaceCardDark)
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(Color(0xFFC8E6F0), Color(0xFFDCDAF0))
+                )
+            )
+    ) {
+        Scaffold(
+            containerColor = Color.Transparent,
+            topBar = {
+                CenterAlignedTopAppBar(
+                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                        containerColor = Color.Transparent
+                    ),
+                    title = {
+                        Text(
+                            "My Medications",
+                            color = DarkText,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.SemiBold
                         )
-                        // Badge style Add button
+                    },
+
+                    actions = {
                         Box(
                             modifier = Modifier
-                                .size(16.dp)
-                                .background(DoseyPurple, CircleShape)
-                                .align(Alignment.TopEnd)
-                                .border(1.5.dp, DeepNavyBackground, CircleShape),
+                                .padding(end = 16.dp)
+                                .size(48.dp)
+                                .clip(CircleShape)
+                                .background(Color.White.copy(alpha = 0.9f))
+                                .border(1.dp, Color.White, CircleShape),
                             contentAlignment = Alignment.Center
                         ) {
-                            Icon(Icons.Default.Add, null, modifier = Modifier.size(10.dp), tint = DeepNavyBackground)
+                            Image(
+                                painter = painterResource(id = R.drawable.doseycharacterbgremoved),
+                                contentDescription = "Dosey Mascot",
+                                modifier = Modifier
+                                    .size(42.dp),
+                                contentScale = ContentScale.Crop
+                            )
                         }
                     }
+                )
+            },
+            floatingActionButton = {
+                FloatingActionButton(
+                    onClick = onNavigateToAdd,
+                    containerColor = DoseyPurple,
+                    contentColor = Color.White,
+                    shape = CircleShape
+                ) {
+                    Icon(Icons.Default.Add, contentDescription = "Add")
                 }
-            )
-        }
-    ) { padding ->
-        Column(modifier = Modifier.padding(padding).fillMaxSize()) {
+            }
+        )
+        { padding ->
+            Column(modifier = Modifier.padding(padding).fillMaxSize()) {
 
-            HeaderSection(medicineList.count { !it.taken })
+                HeaderSection(medicineList.count { !it.taken })
 
-            FullFeatureCalendar(
-                selectedDate = selectedDate,
-                onDateSelected = { newDate -> selectedDate = newDate }
-            )
+                FullFeatureCalendar(
+                    selectedDate = selectedDate,
+                    onDateSelected = { newDate -> selectedDate = newDate }
+                )
 
-            Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(horizontal = 20.dp, vertical = 10.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                val groups = listOf("MORNING", "AFTERNOON", "EVENING")
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(horizontal = 20.dp, vertical = 10.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    val groups = listOf("MORNING", "AFTERNOON", "EVENING")
 
-                groups.forEach { period ->
-                    val filteredMeds = medicineList.filter { getPeriod(it.time) == period }
+                    groups.forEach { period ->
+                        val filteredMeds = medicineList.filter { getPeriod(it.time) == period }
 
-                    if (filteredMeds.isNotEmpty()) {
-                        item { SectionHeader(period) }
-                        items(filteredMeds) { med ->
-                            MedCard(med) { viewModel.markTaken(med.id) }
+                        if (filteredMeds.isNotEmpty()) {
+                            item { SectionHeader(period) }
+                            items(filteredMeds) { med ->
+                                MedCard(
+                                    med = med,
+                                    onCheck = { viewModel.markTaken(med.id) },
+                                    onClick = {
+                                        onNavigateToDetails(med.id)
+                                    }
+                                )
+                            }
                         }
                     }
                 }
@@ -124,70 +154,86 @@ fun HomeScreen(viewModel: MedicineViewModel) {
 fun HeaderSection(remaining: Int) {
     Column(modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("Good Morning, ", fontSize = 26.sp, color = White, fontWeight = FontWeight.Light)
+            Text("Good Morning, ", fontSize = 26.sp, color = doseyText, fontWeight = FontWeight.Light)
             Text("Alex.", fontSize = 26.sp, color = DoseyPurple, fontWeight = FontWeight.Bold)
         }
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 4.dp)) {
             Box(modifier = Modifier.size(6.dp).background(DoseyPurple, CircleShape))
-            Text("  You have $remaining meds left today.", color = TextMuted, fontSize = 14.sp)
+            Text("  You have $remaining meds left today.", color = MutedText, fontSize = 14.sp)
         }
     }
 }
 
 @Composable
-fun MedCard(med: MedicineModel, onCheck: () -> Unit) {
+fun MedCard(med: MedicineModel, onCheck: () -> Unit,
+            onClick: () -> Unit ) {
     val isTaken = med.taken
 
     Surface(
-        color = Color(0xFF1E212D), // Deep Charcoal
-        shape = RoundedCornerShape(24.dp),
-        border = BorderStroke(
-            width = 1.dp,
-            color = if (isTaken) Color.Transparent else DoseyPurple.copy(alpha = 0.2f)
-        ),
+        color = Color.White,
+        shape = RoundedCornerShape(20.dp),
+        tonalElevation = 0.dp,
+        shadowElevation = 6.dp,
+
         modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
+            .clickable { onClick() }
     ) {
         Row(
-            modifier = Modifier.padding(20.dp),
+            modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Icon with a soft background glow
             Box(
                 modifier = Modifier
                     .size(54.dp)
                     .background(DoseyPurple.copy(alpha = 0.1f), RoundedCornerShape(16.dp)),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.pill_image), // Use a high-quality pill SVG
+                Image(
+                    painter = painterResource(id = R.drawable.pill_image),
                     contentDescription = null,
-                    tint = if (isTaken) Color.Gray else DoseyPurple,
-                    modifier = Modifier.size(28.dp)
+                    modifier = Modifier
+                        .size(34.dp)
+                        .alpha(if (isTaken) 0.4f else 1f)
                 )
             }
 
             Column(modifier = Modifier.weight(1f).padding(horizontal = 16.dp)) {
                 Text(
                     text = med.name,
-                    color = if (isTaken) Color.Gray else Color.White,
-                    style = MaterialTheme.typography.titleMedium,
+                    color = if (isTaken) Color.Gray else doseyText,
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
                     text = med.desc,
-                    color = Color.Gray,
-                    style = MaterialTheme.typography.bodySmall
+                    color = MutedText,
+                    fontSize = 13.sp
                 )
             }
 
-            IconButton(
-                onClick = onCheck,
+            Box(
                 modifier = Modifier
                     .size(36.dp)
-                    .background(if (isTaken) DoseyPurple else Color.Transparent, CircleShape)
-                    .border(2.dp, if (isTaken) DoseyPurple else Color.Gray.copy(alpha = 0.5f), CircleShape)
+                    .clip(CircleShape)
+                    .background(
+                        if (isTaken) DoseyPurple else Color.Transparent
+                    )
+                    .border(
+                        2.dp,
+                        if (isTaken) DoseyPurple else Color.LightGray,
+                        CircleShape
+                    )
+                    .clickable { onCheck() },
+                contentAlignment = Alignment.Center
             ) {
-                if (isTaken) Icon(Icons.Default.Check, null, tint = Color.Black, modifier = Modifier.size(18.dp))
+                if (isTaken) {
+                    Icon(
+                        Icons.Default.Check,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
             }
         }
     }
@@ -197,7 +243,7 @@ fun MedCard(med: MedicineModel, onCheck: () -> Unit) {
 fun SectionHeader(title: String) {
     Text(
         text = title,
-        color = TextMuted,
+        color = MutedText,
         fontSize = 11.sp,
         fontWeight = FontWeight.ExtraBold,
         letterSpacing = 1.5.sp,
@@ -214,7 +260,7 @@ fun FullFeatureCalendar(
     val dateList = remember {
         val list = mutableListOf<Date>()
         val cal = Calendar.getInstance()
-        cal.add(Calendar.DAY_OF_YEAR, -7)
+
         repeat(21) {
             list.add(cal.time)
             cal.add(Calendar.DAY_OF_YEAR, 1)
@@ -225,22 +271,32 @@ fun FullFeatureCalendar(
     val dayFormat = SimpleDateFormat("EEE", Locale.getDefault())
     val dateFormat = SimpleDateFormat("d", Locale.getDefault())
 
+
+    val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
+
     Column(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
         if (!isSameDay(selectedDate, today)) {
             Text(
                 text = "Go to Today",
-                color = PurplePinkAccent,
+                color = doseyText,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .clickable { onDateSelected(today) }
+                    .clickable {
+                        onDateSelected(today)
+                        coroutineScope.launch {
+                            listState.animateScrollToItem(0)
+                        }
+                    }
                     .padding(bottom = 12.dp),
                 textDecoration = TextDecoration.Underline
             )
         }
 
         LazyRow(
+            state = listState,
             modifier = Modifier.fillMaxWidth(),
             contentPadding = PaddingValues(horizontal = 20.dp),
             horizontalArrangement = Arrangement.spacedBy(14.dp)
@@ -265,13 +321,13 @@ fun FullFeatureCalendar(
                 ) {
                     Text(
                         text = dayFormat.format(date).uppercase(),
-                        color = if (isSelected) DeepNavyBackground else TextMuted,
+                        color = if (isSelected) Color.White else MutedText,
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
                         text = dateFormat.format(date),
-                        color = if (isSelected) DeepNavyBackground else White,
+                        color = if (isSelected) Color.White else doseyText,
                         fontWeight = FontWeight.ExtraBold,
                         fontSize = 18.sp
                     )

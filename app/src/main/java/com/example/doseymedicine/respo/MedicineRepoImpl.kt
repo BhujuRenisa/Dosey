@@ -65,4 +65,25 @@ class MedicineRepoImpl: MedicineRepo {
                 callback(it.isSuccessful)
             }
     }
+
+    override fun getMedicineById(
+        medicineId: String,
+        callback: (MedicineModel?) -> Unit
+    ) {
+        val uid = auth.currentUser?.uid ?: return
+
+        database.child("medicines")
+            .child(uid)
+            .child(medicineId)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val medicine = snapshot.getValue(MedicineModel::class.java)
+                    callback(medicine)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    callback(null)
+                }
+            })
+    }
 }
