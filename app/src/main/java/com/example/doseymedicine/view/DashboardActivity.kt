@@ -57,7 +57,11 @@ fun Dashboard(viewModel: MedicineViewModel) {
     var selectedMedicineId by remember { mutableStateOf<String?>(null) }
 
     val gradientBackground = Brush.verticalGradient(
-        colors = listOf(Color(0xFFC8E6F0), Color(0xFFDCDAF0))
+        colors = listOf(
+            Color(0xFFF3E5F5),
+            Color(0xFFE8F5E9)
+
+        )
     )
 
     Box(
@@ -89,6 +93,7 @@ fun Dashboard(viewModel: MedicineViewModel) {
             }
         ) { paddingValues ->
             Box(modifier = Modifier.padding(paddingValues)) {
+                // Inside your Dashboard function...
                 when {
                     selectedMedicineId != null -> {
                         MedicineDetailsScreen(
@@ -99,7 +104,7 @@ fun Dashboard(viewModel: MedicineViewModel) {
                     }
 
                     isAddingMedicine -> {
-                        AddMedicineScreen(
+                        AddMedicine(
                             viewModel = viewModel,
                             onBack = { isAddingMedicine = false }
                         )

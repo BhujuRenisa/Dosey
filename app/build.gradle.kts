@@ -65,6 +65,7 @@ dependencies { // <--- THIS IS THE ONLY LOCATION FOR THIS BLOCK
     implementation(libs.androidx.compose.remote.creation.core)
     implementation("androidx.compose.foundation:foundation")
     implementation(libs.androidx.compose.runtime)
+    implementation(libs.androidx.material3)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -75,7 +76,7 @@ dependencies { // <--- THIS IS THE ONLY LOCATION FOR THIS BLOCK
 
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.compose.runtime.livedata)
-
+    implementation("androidx.compose.material:material-icons-extended:1.7.0")
 
 
 

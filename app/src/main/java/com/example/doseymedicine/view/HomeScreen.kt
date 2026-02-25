@@ -57,7 +57,10 @@ fun HomeScreen(viewModel: MedicineViewModel,onNavigateToAdd: () -> Unit ,
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(
-                    colors = listOf(Color(0xFFC8E6F0), Color(0xFFDCDAF0))
+                    colors = listOf(
+                        Color(0xFFF3E5F5),
+                        Color(0xFFE8F5E9)
+                    )
                 )
             )
     ) {

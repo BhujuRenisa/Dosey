@@ -1,19 +1,27 @@
 package com.example.doseymedicine.view
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import com.example.doseymedicine.R
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -27,125 +35,184 @@ fun Profile(
     viewModel: MedicineViewModel,
     onLogout: () -> Unit
 ) {
-    // 1. Observe the actual medicine list from your ViewModel
-    val medicines by viewModel.medicines.observeAsState(emptyList())
-    val currentUser = FirebaseAuth.getInstance().currentUser
 
-    // Standard Dosey Gradient
+    val medicines by viewModel.medicines.observeAsState(emptyList())
+    val activeMeds = medicines.size
+    val adherence = 92 // you can calculate later
+
+    val currentUser = FirebaseAuth.getInstance().currentUser
+    val userEmail = currentUser?.email ?: "No Email"
+    val userName = currentUser?.displayName ?: "User"
+
     val gradientBackground = Brush.verticalGradient(
-        colors = listOf(Color(0xFFC8E6F0), Color(0xFFDCDAF0))
+        colors = listOf(
+            Color(0xFFF3E5F5),
+            Color(0xFFE8F5E9)
+        )
     )
 
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .background(gradientBackground)
-            .padding(24.dp),
+            .padding(horizontal = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(40.dp))
 
-        // --- IDENTITY SECTION ---
-        Surface(
-            modifier = Modifier.size(100.dp),
-            shape = RoundedCornerShape(30.dp), // Modern professional rounded corners
-            color = Color.White.copy(alpha = 0.6f)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Person,
-                contentDescription = null,
-                modifier = Modifier.padding(20.dp),
-                tint = PrimaryPurple
+        item { Spacer(modifier = Modifier.height(40.dp)) }
+
+        // ⭐ Avatar
+        item {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .size(120.dp)
+                    .clip(CircleShape)
+                    .background(Color.White)
+                    .border(3.dp, PrimaryPurple, CircleShape)
+            ) {
+                Icon(
+                    Icons.Default.Person,
+                    contentDescription = null,
+                    tint = PrimaryPurple,
+                    modifier = Modifier.size(55.dp)
+                )
+            }
+        }
+
+        item { Spacer(modifier = Modifier.height(16.dp)) }
+
+        // ⭐ Name
+        item {
+            Text(
+                text = userName,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold
             )
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = currentUser?.displayName ?: "User Name",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            color = DarkText
-        )
-        Text(
-            text = currentUser?.email ?: "user@example.com",
-            fontSize = 14.sp,
-            color = Color.Gray
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // --- STATS SECTION ---
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            // Reusing your logic to show total meds
-            StatCard("Active Meds", medicines.size.toString(), Modifier.weight(1f))
-            StatCard("Adherence", "92%", Modifier.weight(1f))
+        // ⭐ Email
+        item {
+            Text(
+                text = userEmail,
+                fontSize = 14.sp,
+                color = Color.DarkGray
+            )
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
+        item { Spacer(modifier = Modifier.height(28.dp)) }
 
-        // --- ACTIONS SECTION ---
-        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            ProfileMenuItem(Icons.Default.Settings, "Account Settings")
-            ProfileMenuItem(Icons.Default.Notifications, "Notification Tones")
-            ProfileMenuItem(Icons.Default.Info, "Privacy Policy")
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Professional Logout Button
-            Button(
-                onClick = onLogout,
-                modifier = Modifier.fillMaxWidth().height(56.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFFFEBEE), // Soft red tint
-                    contentColor = Color.Red
-                ),
-                shape = RoundedCornerShape(16.dp) // Consistent with DoseyTextField
+        // ⭐ Stats Card
+        item {
+            Card(
+                shape = RoundedCornerShape(24.dp),
+                elevation = CardDefaults.cardElevation(8.dp),
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Icon(Icons.Default.ExitToApp, contentDescription = null)
-                Spacer(Modifier.width(8.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 24.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    ProfileStat(activeMeds.toString(), "Active Meds")
+                    ProfileStat("$adherence%", "Adherence")
+                }
+            }
+        }
+
+        item { Spacer(modifier = Modifier.height(28.dp)) }
+
+        // ⭐ Settings Section
+        item {
+            Card(
+                shape = RoundedCornerShape(24.dp),
+                elevation = CardDefaults.cardElevation(6.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column {
+
+                    ProfileItem(Icons.Default.Settings, "Account Settings")
+                    Divider()
+
+                    ProfileItem(Icons.Default.Notifications, "Notification Tones")
+                    Divider()
+
+                    ProfileItem(Icons.Default.Info, "Privacy Policy")
+                }
+            }
+        }
+
+        item { Spacer(modifier = Modifier.height(40.dp)) }
+
+        // ⭐ Logout Button
+        item {
+            OutlinedButton(
+                onClick = {
+                    FirebaseAuth.getInstance().signOut()
+                    onLogout()
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(55.dp),
+                shape = RoundedCornerShape(18.dp),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    contentColor = Color.Red
+                )
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.outline_logout_24),
+                    contentDescription = null)
+                Spacer(modifier = Modifier.width(8.dp))
                 Text("Logout", fontWeight = FontWeight.Bold)
             }
         }
+
+        item { Spacer(modifier = Modifier.height(40.dp)) }
     }
 }
 
 @Composable
-fun StatCard(label: String, value: String, modifier: Modifier = Modifier) {
-    Surface(
-        modifier = modifier,
-        shape = RoundedCornerShape(20.dp), // Smooth corners for professional look
-        color = Color.White.copy(alpha = 0.7f)
+fun ProfileStat(value: String, label: String) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            modifier = Modifier.padding(20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(value, fontSize = 28.sp, fontWeight = FontWeight.Bold, color = PrimaryPurple)
-            Text(label, fontSize = 12.sp, color = Color.Gray)
-        }
+        Text(
+            text = value,
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Bold,
+            color = PrimaryPurple
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = label,
+            fontSize = 14.sp,
+            color = Color.Gray
+        )
     }
 }
 
 @Composable
-fun ProfileMenuItem(icon: ImageVector, title: String) {
-    Surface(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        color = Color.White.copy(alpha = 0.4f)
+fun ProfileItem(icon: ImageVector, title: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { }
+            .padding(18.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(icon, contentDescription = null, tint = PrimaryPurple, modifier = Modifier.size(20.dp))
-            Spacer(Modifier.width(16.dp))
-            Text(title, fontWeight = FontWeight.Medium, color = DarkText)
-            Spacer(Modifier.weight(1f))
-//            Icon(Icons.Default.ChevronRight, contentDescription = null, tint = Color.Gray)
-        }
+
+        Icon(
+            icon,
+            contentDescription = null,
+            tint = PrimaryPurple
+        )
+
+        Spacer(modifier = Modifier.width(16.dp))
+
+        Text(
+            text = title,
+            fontSize = 16.sp
+        )
     }
 }

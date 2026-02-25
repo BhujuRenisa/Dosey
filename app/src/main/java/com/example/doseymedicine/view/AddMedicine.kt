@@ -46,228 +46,93 @@ import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddMedicineScreen (
+
+fun AddMedicine(
     viewModel: MedicineViewModel,
     onBack: () -> Unit
 ) {
-    var medName by remember { mutableStateOf("") }
-    var dosage by remember { mutableStateOf("") }
-    var time by remember { mutableStateOf("") }
-    var desc by remember { mutableStateOf("") }
-    var frequency by remember { mutableStateOf("") }
-    var startDate by remember { mutableStateOf("") }
-    var endDate by remember { mutableStateOf("") }
-    var totalPills by remember { mutableStateOf("") }
-    var pillsLeft by remember { mutableStateOf("") }
+    // Current Step State
+    var step by remember { mutableIntStateOf(0) }
 
-    // Your original light gradient
-    val gradientBackground = Brush.verticalGradient(
+    // Collected Data (Replacing your old individual variables)
+    var name by remember { mutableStateOf("") }
+    var frequency by remember { mutableStateOf("Once daily") }
+    var startDate by remember { mutableStateOf("Select Date") }
+    var reminderTime by remember { mutableStateOf("08:00 AM") }
+    var inventory by remember { mutableIntStateOf(30) }
+    var threshold by remember { mutableIntStateOf(10) }
+
+    val flowGradient = Brush.verticalGradient(
         colors = listOf(Color(0xFFC8E6F0), Color(0xFFDCDAF0))
     )
 
-    var showTimePicker by remember { mutableStateOf(false) }
-
-    val calendar = Calendar.getInstance()
-
-    val timePickerState = rememberTimePickerState(
-        initialHour = calendar.get(Calendar.HOUR_OF_DAY),
-        initialMinute = calendar.get(Calendar.MINUTE),
-        is24Hour = false
-    )
-
-    LazyColumn(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(gradientBackground)
-            .padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+            .background(flowGradient)
+            .padding(start = 24.dp, end = 24.dp, top = 24.dp, bottom = 60.dp)
     ) {
+        // --- PROGRESS INDICATOR ---
+        LinearProgressIndicator(
+            progress = (step + 1) / 5f,
+            modifier = Modifier.fillMaxWidth().padding(vertical = 20.dp),
+            color = Color.White,
+            trackColor = Color.White.copy(alpha = 0.3f)
+        )
 
-
-        item{
-            Row (modifier =  Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)){
-                Column(modifier= Modifier.weight(0.2f)){
-                    IconButton(
-                        onClick = onBack,
-//                        modifier = Modifier.padding(top = 16.dp)
-                    ) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = PrimaryPurple)
-                    }
-                }
-                Column(modifier= Modifier.weight(1f). padding(top= 9.dp)) {
-                    Text(
-                        "Add New Medicine",
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = PrimaryPurple
-                    )
-                }
+        // --- DYNAMIC CONTENT ---
+        Box(modifier = Modifier.weight(1f)) {
+            when (step) {
+                0 -> MedicineNameStep(name) { name = it }
+                1 -> FrequencyStep(frequency) { frequency = it }
+                2 -> TimeStep(startDate, reminderTime, { startDate = it }, { reminderTime = it })
+                3 -> InventoryStep(inventory, threshold, { inventory = it }, { threshold = it })
+                4 -> ConfirmationStep(name, frequency, startDate, reminderTime, inventory)
             }
         }
+        Spacer(modifier = Modifier.height(24.dp))
 
-        item {
-            DoseyLabel("Medicine Name")
-            DoseyTextField(
-                value = medName,
-                onValueChange = { medName = it },
-                placeholder = "e.g. Amoxicillin"
-            )
-        }
-
-        item {
-            DoseyLabel("Description")
-            DoseyTextField(
-                value = desc,
-                onValueChange = { desc = it },
-                placeholder = "e.g. After food"
-            )
-        }
-
-        item {
-            DoseyLabel("Dosage")
-            DoseyTextField(
-                value = dosage,
-                onValueChange = { dosage = it },
-                placeholder = "e.g. 500mg"
-            )
-        }
-//        FREQUENCY
-        item {
-            DoseyLabel("Frequency")
-            DoseyTextField(
-               value = frequency,
-               onValueChange = { frequency = it },
-              placeholder = "How many times a day?"
-           )
-       }
-
-
-//        START AND END DATE FIELD
-        item{
-            Row (modifier =  Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)){
-                Column(modifier= Modifier.weight(1f)){
-                    DoseyLabel("Start Date")
-                    DoseyTextField(
-                        value = startDate,
-                        onValueChange = { startDate = it },
-                        placeholder = "DD/MM/YYYY"
-                    )
-                }
-                Column(modifier= Modifier.weight(1f)) {
-                    DoseyLabel("End Date")
-                    DoseyTextField(
-                        value = endDate,
-                        onValueChange = { endDate = it },
-                        placeholder = "DD/MM/YYYY"
-                    )
-                }
+        // --- NAVIGATION BUTTONS ---
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Back/Cancel Button
+            TextButton(onClick = { if (step > 0) step-- else onBack() }) {
+                Text(if (step == 0) "Cancel" else "Back",
+                    color = Color.White.copy(alpha = 0.8f)
+                )
             }
-        }
 
-//        PILLS
-        item {
-            Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Column(modifier = Modifier.weight(1f)) {
-                    DoseyLabel("Total")
-                    DoseyTextField(value = totalPills, onValueChange = { totalPills = it }, placeholder = "30")
-                }
-                Column(modifier = Modifier.weight(1f)) {
-                    DoseyLabel("Left")
-                    DoseyTextField(value = pillsLeft, onValueChange = { pillsLeft = it }, placeholder = "30")
-                }
-            }
-        }
-
-
-//        REMINDER TIME
-        item {
-            DoseyPickerField(
-                label = "Reminder Time",
-                value = time,
-                placeholder = "Select time",
-                onClick = { showTimePicker = true }
-            )
-        }
-        // Save Button
-        item {
-            Spacer(modifier = Modifier.height(15.dp))
+            // Next/Save Button
             Button(
                 onClick = {
-                    if (medName.isNotEmpty() && time.isNotEmpty()) {
+                    if (step < 4) {
+                        if (step == 0 && name.isEmpty()) return@Button
+                        step++
+                    } else {
                         viewModel.addMedicine(
-                            name = medName,
-                            desc = desc,
-                            dosage = dosage,
-                            time = time,
+                            name = name,
+                            desc = "Prescription",
+                            dosage = "1 pill",
+                            time = reminderTime,
                             frequency = frequency,
                             startDate = startDate,
-                            endDate = endDate,
-                            totalPills = totalPills.toIntOrNull() ?: 0,
-                            pillsLeft = pillsLeft.toIntOrNull() ?: 0
-                        ) { success, message ->
+                            endDate = "Ongoing",
+                            totalPills = inventory,
+                            pillsLeft = inventory
+                        ) { success, _ ->
                             if (success) onBack()
                         }
                     }
                 },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(60.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = PrimaryPurple),
-                shape = RoundedCornerShape(20.dp)
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                    contentColor = Color(0xFF6A5AE0)),
+                shape = RoundedCornerShape(16.dp)
             ) {
-                Text(
-                    "Save Medicine",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
-            }
-        }
-    }
-    if (showTimePicker) {
-        Dialog(onDismissRequest = { showTimePicker = false }) {
-            Surface(
-                shape = RoundedCornerShape(32.dp),
-                color = Color(0xFFF5F3FF),
-                tonalElevation = 12.dp,
-                modifier = Modifier.padding(18.dp)
-            ) {
-                Column(
-                    modifier = Modifier.padding(28.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        "Set Reminder Time",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = PrimaryPurple,
-                        modifier = Modifier.padding(bottom = 20.dp)
-                    )
-
-                    TimePicker(state = timePickerState)
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End
-                    ) {
-                        TextButton(onClick = { showTimePicker = false }) {
-                            Text("Cancel")
-                        }
-                        TextButton(onClick = {
-                            val cal = Calendar.getInstance()
-                            cal.set(Calendar.HOUR_OF_DAY, timePickerState.hour)
-                            cal.set(Calendar.MINUTE, timePickerState.minute)
-
-                            val formatter = java.text.SimpleDateFormat("hh:mm a", java.util.Locale.getDefault())
-                            time = formatter.format(cal.time)
-
-                            showTimePicker = false
-                        }) {
-                            Text("Confirm")
-                        }
-                    }
-                }
+                Text(if (step == 4) "Save Medicine" else "Next")
             }
         }
     }
