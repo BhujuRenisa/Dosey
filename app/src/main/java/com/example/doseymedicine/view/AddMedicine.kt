@@ -51,10 +51,8 @@ fun AddMedicine(
     viewModel: MedicineViewModel,
     onBack: () -> Unit
 ) {
-    // Current Step State
     var step by remember { mutableIntStateOf(0) }
 
-    // Collected Data (Replacing your old individual variables)
     var name by remember { mutableStateOf("") }
     var frequency by remember { mutableStateOf("Once daily") }
     var startDate by remember { mutableStateOf("Select Date") }
@@ -63,7 +61,10 @@ fun AddMedicine(
     var threshold by remember { mutableIntStateOf(10) }
 
     val flowGradient = Brush.verticalGradient(
-        colors = listOf(Color(0xFFC8E6F0), Color(0xFFDCDAF0))
+        colors = listOf(
+            Color(0xFFC8E6F0),
+            Color(0xFFDCDAF0)
+        )
     )
 
     Column(
@@ -76,8 +77,8 @@ fun AddMedicine(
         LinearProgressIndicator(
             progress = (step + 1) / 5f,
             modifier = Modifier.fillMaxWidth().padding(vertical = 20.dp),
-            color = Color.White,
-            trackColor = Color.White.copy(alpha = 0.3f)
+            color = Color(0xFFBA68C8),
+            trackColor = Color(0xFFBA68C8).copy(alpha = 0.1f)
         )
 
         // --- DYNAMIC CONTENT ---
@@ -101,7 +102,7 @@ fun AddMedicine(
             // Back/Cancel Button
             TextButton(onClick = { if (step > 0) step-- else onBack() }) {
                 Text(if (step == 0) "Cancel" else "Back",
-                    color = Color.White.copy(alpha = 0.8f)
+                    color = Color.Black.copy(alpha = 0.8f)
                 )
             }
 
@@ -129,7 +130,8 @@ fun AddMedicine(
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.White,
-                    contentColor = Color(0xFF6A5AE0)),
+                    contentColor = Color.Magenta
+                ),
                 shape = RoundedCornerShape(16.dp)
             ) {
                 Text(if (step == 4) "Save Medicine" else "Next")

@@ -1,5 +1,7 @@
 package com.example.doseymedicine.view
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.doseymedicine.ui.theme.PrimaryPurple
 
 @Composable
 fun ConfirmationStep(
@@ -24,62 +27,94 @@ fun ConfirmationStep(
     time: String,
     inventory: Int
 ) {
-    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp)) {
-        // Hero Header
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp)
+    ) {
+
+        // ⭐ Hero Header
         Text(
-            text = "Confirm Details",
-            fontSize = 32.sp, // Large, "App-like" font size
-            fontWeight = FontWeight.Black,
-            color = Color.White,
-            letterSpacing = (-0.5).sp
-        )
-        Text(
-            text = "Review your schedule before saving.",
-            color = Color.White.copy(alpha = 0.6f),
-            fontSize = 16.sp
+            text = "Review & Confirm",
+            fontSize = 30.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFFF7A1A1)
         )
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(6.dp))
 
-        // Glassmorphic "Receipt" Card
+        Text(
+            text = "Make sure everything looks correct",
+            fontSize = 15.sp,
+            color = Color.White.copy(alpha = 0.7f)
+        )
+
+        Spacer(modifier = Modifier.height(28.dp))
+
+        // ⭐ Premium Glass Card
         Surface(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(32.dp),
-            color = Color.White.copy(alpha = 0.12f), // Frosted glass
-            border = androidx.compose.foundation.BorderStroke(1.dp, Color.White.copy(alpha = 0.15f))
+            color = Color.White,
+            shadowElevation = 12.dp
         ) {
-            Column(modifier = Modifier.padding(24.dp)) {
-                // Medicine Name Hero
-                Text(
-                    text = "MEDICINE",
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White.copy(alpha = 0.5f),
-                    letterSpacing = 1.sp
-                )
-                Text(
-                    text = name.uppercase(),
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    color = Color.White
+
+            Column {
+
+                // ⭐ Top Accent Bar
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(6.dp)
+                        .background(PrimaryPurple)
                 )
 
-                androidx.compose.material3.HorizontalDivider(
-                    modifier = Modifier.padding(vertical = 20.dp),
-                    color = Color.White.copy(alpha = 0.1f)
-                )
+                Column(modifier = Modifier.padding(26.dp)) {
 
-                // Info Grid
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    SummaryItem("Frequency", frequency, Modifier.weight(1f))
-                    SummaryItem("Start Date", date, Modifier.weight(1f))
-                }
+                    Text(
+                        text = name.uppercase(),
+                        fontSize = 26.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = Color(0xFF2E2E2E)
+                    )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
 
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    SummaryItem("Time", time, Modifier.weight(1f))
-                    SummaryItem("Current Stock", "$inventory pills", Modifier.weight(1f))
+                    androidx.compose.material3.HorizontalDivider(
+                        color = Color(0xFFF0F0F0)
+                    )
+
+                    Spacer(modifier = Modifier.height(22.dp))
+
+                    // Info Grid
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        SummaryItem(
+                            label = "Frequency",
+                            value = frequency,
+                            modifier = Modifier.weight(1f)
+                        )
+                        SummaryItem(
+                            label = "Start Date",
+                            value = date,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(26.dp))
+
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        SummaryItem(
+                            label = "Time",
+                            value = time,
+                            modifier = Modifier.weight(1f)
+                        )
+                        SummaryItem(
+                            label = "Stock",
+                            value = "$inventory pills",
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
                 }
             }
         }
@@ -87,21 +122,29 @@ fun ConfirmationStep(
 }
 
 @Composable
-fun SummaryItem(label: String, value: String, modifier: Modifier = Modifier) {
+fun SummaryItem(
+    label: String,
+    value: String,
+    modifier: Modifier = Modifier
+) {
+
     Column(modifier = modifier) {
+
         Text(
             text = label.uppercase(),
             fontSize = 11.sp,
-            color = Color.White.copy(alpha = 0.5f),
             fontWeight = FontWeight.Bold,
-            letterSpacing = 0.5.sp
+            color = Color(0xFF9E9E9E),
+            letterSpacing = 1.sp
         )
-        Spacer(modifier = Modifier.height(4.dp))
+
+        Spacer(modifier = Modifier.height(6.dp))
+
         Text(
             text = value,
             fontSize = 17.sp,
-            color = Color.White,
-            fontWeight = FontWeight.SemiBold
+            fontWeight = FontWeight.SemiBold,
+            color = Color(0xFF2E2E2E)
         )
     }
 }

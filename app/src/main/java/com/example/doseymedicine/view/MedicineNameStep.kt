@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,61 +25,56 @@ import androidx.compose.ui.unit.sp
 import com.example.doseymedicine.R
 
 
+val DarkBrown = Color(0xFF3E2723)
+val SoftBrown = Color(0xFF5D4037).copy(alpha = 0.7f)
+
 @Composable
 fun MedicineNameStep(name: String, onNameChange: (String) -> Unit) {
-    // FillMaxSize and Center arrangement removes the "empty" feeling
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // High-end glassmorphism icon effect
         Surface(
-            modifier = Modifier.size(120.dp),
+            modifier = Modifier.size(140.dp),
             shape = CircleShape,
-            color = Color.White.copy(alpha = 0.1f)
+            color = Color.White,
+            shadowElevation = 12.dp
         ) {
-            Image(
+            Icon(
                 painter = painterResource(id = R.drawable.outline_medication_24),
                 contentDescription = null,
-                modifier = Modifier.padding(30.dp).size(60.dp),
-                colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(Color.White)
+                modifier = Modifier.padding(35.dp),
+                tint = Color(0xFFBA68C8)
             )
         }
 
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(48.dp))
 
         Text(
             text = "Medication Name",
-            fontSize = 32.sp, // Match the "App-like" header size
+            fontSize = 32.sp,
             fontWeight = FontWeight.Black,
-            color = Color.White,
+            color = DarkBrown,
             textAlign = TextAlign.Center
         )
+        Spacer(modifier = Modifier.height(11.dp))
+
 
         Text(
-            text = "Search or type the name of your medicine.",
+            text = "What medicine are we taking today?",
             fontSize = 16.sp,
-            color = Color.White.copy(alpha = 0.6f),
+            color = SoftBrown, 
             textAlign = TextAlign.Center
         )
 
-        Spacer(modifier = Modifier.height(48.dp))
+        Spacer(modifier = Modifier.height(32.dp))
 
-        // Reuse your Dosey style fields
         DoseyTextField(
             value = name,
             onValueChange = onNameChange,
             placeholder = "e.g. Glycomet",
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
-        )
-
-        // Add a small tip to fill space and help the user
-        Text(
-            text = "Tip: Include the dosage (e.g. 500mg) for better tracking.",
-            fontSize = 12.sp,
-            color = Color.White.copy(alpha = 0.4f),
-            modifier = Modifier.padding(top = 16.dp)
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp)
         )
     }
 }

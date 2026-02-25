@@ -50,24 +50,6 @@ fun FrequencyStep(
                 onClick = { onFrequencySelected(option) }
             )
         }
-
-//        FrequencyCard(
-//            title = "Once daily",
-//            isSelected = selectedFrequency == "Once daily",
-//            onClick = { onFrequencySelected("Once daily") }
-//        )
-//
-//        FrequencyCard(
-//            title = "Twice daily",
-//            isSelected = selectedFrequency == "Twice daily",
-//            onClick = { onFrequencySelected("Twice daily") }
-//        )
-//
-//        FrequencyCard(
-//            title = "On demand",
-//            isSelected = selectedFrequency == "On demand",
-//            onClick = { onFrequencySelected("On demand") }
-//        )
     }
 }
 @Composable

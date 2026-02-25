@@ -15,6 +15,7 @@ val SoftPurple = Color(0xFFE1BEE7)
 val DarkText = Color(0xFF1A1C1E)
 val DoseyPurple = Color(0xFF565E83)
 val MutedText = Color(0xFF6B6E7B)
-val LightSurface = Color(0xFFFFFFFF)
+
+val Pinktext = Color(0xFFF7A1A1)
 val doseyText= Color(0xFF001F3F)
 
