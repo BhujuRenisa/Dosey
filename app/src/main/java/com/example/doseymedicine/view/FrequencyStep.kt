@@ -22,7 +22,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.room.util.copy
 import com.example.doseymedicine.ui.theme.PrimaryPurple
+
+val SoftLavender = Color(0xFFBA68C8)
 
 @Composable
 fun FrequencyStep(
@@ -30,17 +33,24 @@ fun FrequencyStep(
     onFrequencySelected: (String) -> Unit
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 4.dp)
     ) {
-
+        Text(
+            text = "Frequency",
+            fontSize = 32.sp,
+            fontWeight = FontWeight.Black,
+            color = DarkBrown, //
+            letterSpacing = (-0.5).sp
+        )
         Text(
             text = "How often do you take this medication?",
-            color = Color.White,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.SemiBold
+            color = DarkBrown.copy(alpha = 0.6f),
+            fontSize = 16.sp
         )
 
-        Spacer(modifier = Modifier.height(28.dp))
+        Spacer(modifier = Modifier.height(32.dp))
 
         val options = listOf("Once daily", "Twice daily", "On demand")
         options.forEach { option ->
@@ -52,58 +62,45 @@ fun FrequencyStep(
         }
     }
 }
+
 @Composable
 fun FrequencyCard(
     title: String,
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
-
-    val backgroundColor =
-        if (isSelected)
-            Color.White.copy(alpha = 0.18f)
-        else
-            Color.White.copy(alpha = 0.08f)
-
-    val borderColor =
-        if (isSelected)
-            PrimaryPurple
-        else
-            Color.White.copy(alpha = 0.15f)
+    val backgroundColor = if (isSelected) Color.White else Color.White.copy(alpha = 0.6f)
+    val borderColor = if (isSelected) SoftLavender else Color.Transparent
+    val textColor = if (isSelected) DarkBrown else DarkBrown.copy(alpha = 0.7f)
 
     Surface(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
             .clickable { onClick() },
-        shape = RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(24.dp),
         color = backgroundColor,
-        border = BorderStroke(
-            width = 1.5.dp,
-            color = borderColor
-        ),
-        tonalElevation = if (isSelected) 6.dp else 0.dp
+        border = if (isSelected) BorderStroke(2.dp, borderColor) else null,
+        shadowElevation = if (isSelected) 8.dp else 2.dp
     ) {
-
         Row(
-            modifier = Modifier.padding(horizontal = 20.dp, vertical = 18.dp),
+            modifier = Modifier.padding(horizontal = 24.dp, vertical = 20.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             Text(
                 text = title,
                 modifier = Modifier.weight(1f),
-                color = Color.White,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Medium
+                color = textColor,
+                fontSize = 18.sp,
+                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
             )
 
             RadioButton(
                 selected = isSelected,
                 onClick = onClick,
                 colors = RadioButtonDefaults.colors(
-                    selectedColor = PrimaryPurple,
-                    unselectedColor = Color.White.copy(alpha = 0.5f)
+                    selectedColor = SoftLavender,
+                    unselectedColor = DarkBrown.copy(alpha = 0.2f)
                 )
             )
         }
