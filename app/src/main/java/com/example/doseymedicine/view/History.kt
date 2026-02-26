@@ -31,21 +31,23 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.doseymedicine.model.MedicineModel
+import com.example.doseymedicine.ui.theme.PrimaryPurple
 import com.example.doseymedicine.viewmodel.MedicineViewModel
 
 @Composable
 fun History(viewModel: MedicineViewModel) {
-    val medicines by viewModel.medicines.observeAsState(emptyList())
+    val allMedicines by viewModel.medicines.observeAsState(emptyList())
 
-    val historyList = medicines.filter { it.taken }
+    val takenMeds = allMedicines.filter { it.taken }
+
+    val totalCount = takenMeds.size
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(Brush.verticalGradient(listOf
-                (Color(0xFFFDFCFB),
-                Color(0xFFE2D1F9))))
-            .padding(16.dp)
+            .background(Brush.verticalGradient(listOf(Color(0xFFFDFCFB), Color(0xFFE2D1F9))))
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
             Text(
@@ -54,26 +56,57 @@ fun History(viewModel: MedicineViewModel) {
                 fontWeight = FontWeight.Bold,
                 color = DarkBrown,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top= 12.dp, bottom = 16.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 14.dp, bottom = 25.dp)
             )
         }
 
-        if (historyList.isEmpty()) {
-            item {
-                Box(modifier = Modifier.fillParentMaxSize(),
-                    contentAlignment = Alignment.Center) {
-                    Text("No history found. Take your meds to see them here!",
-                        color = Color.Gray)
+        // Stat Counter Card
+        item {
+            Card(
+                modifier = Modifier
+                    .padding(bottom = 24.dp)
+                    .width(140.dp),
+                shape = RoundedCornerShape(20.dp),
+                colors = CardDefaults.cardColors(containerColor = PrimaryPurple.copy(alpha = 0.15f))
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = totalCount.toString(),
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = PrimaryPurple
+                    )
+                    Text(
+                        text = "Doses Completed",
+                        fontSize = 12.sp,
+                        color = DarkBrown.copy(alpha = 0.7f),
+                        fontWeight = FontWeight.SemiBold
+                    )
                 }
             }
+        }
+
+        // History List
+        if (takenMeds.isEmpty()) {
+            item {
+                Text(
+                    "No history yet. Stay healthy!",
+                    color = Color.Gray,
+                    modifier = Modifier.padding(top = 40.dp)
+                )
+            }
         } else {
-            items(historyList) { medicine ->
-                HistoryCard(medicine)
+            items(takenMeds) { med ->
+                HistoryCard(med)
             }
         }
     }
 }
-
 @Composable
 fun HistoryCard(medicine: MedicineModel) {
     Card(
