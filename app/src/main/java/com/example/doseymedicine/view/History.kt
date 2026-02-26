@@ -15,9 +15,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,15 +33,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.doseymedicine.model.MedicineModel
+import com.example.doseymedicine.ui.theme.DoseyPurple
 import com.example.doseymedicine.ui.theme.PrimaryPurple
 import com.example.doseymedicine.viewmodel.MedicineViewModel
 
 @Composable
 fun History(viewModel: MedicineViewModel) {
     val allMedicines by viewModel.medicines.observeAsState(emptyList())
-
     val takenMeds = allMedicines.filter { it.taken }
-
     val totalCount = takenMeds.size
 
     LazyColumn(
@@ -67,9 +68,10 @@ fun History(viewModel: MedicineViewModel) {
             Card(
                 modifier = Modifier
                     .padding(bottom = 24.dp)
-                    .width(140.dp),
+                    .width(160.dp),
                 shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = PrimaryPurple.copy(alpha = 0.15f))
+                colors = CardDefaults.cardColors(
+                    containerColor = PrimaryPurple.copy(alpha = 0.15f))
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp),
@@ -91,7 +93,6 @@ fun History(viewModel: MedicineViewModel) {
             }
         }
 
-        // History List
         if (takenMeds.isEmpty()) {
             item {
                 Text(
@@ -102,13 +103,17 @@ fun History(viewModel: MedicineViewModel) {
             }
         } else {
             items(takenMeds) { med ->
-                HistoryCard(med)
+                HistoryCard(
+                    medicine = med,
+                    onUndo = { viewModel.undoTaken(med.id) }
+                )
             }
         }
     }
 }
+
 @Composable
-fun HistoryCard(medicine: MedicineModel) {
+fun HistoryCard(medicine: MedicineModel, onUndo: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -127,14 +132,29 @@ fun HistoryCard(medicine: MedicineModel) {
                 tint = Color(0xFF4CAF50),
                 modifier = Modifier.size(32.dp)
             )
+
             Spacer(modifier = Modifier.width(16.dp))
-            Column {
-                Text(text = medicine.name,
+
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = medicine.name,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp)
-                Text(text = "Taken at ${medicine.time}",
+                    fontSize = 18.sp,
+                    color = DarkBrown
+                )
+                Text(
+                    text = "Taken at ${medicine.time}",
                     color = Color.Gray,
-                    fontSize = 14.sp)
+                    fontSize = 14.sp
+                )
+            }
+
+            IconButton(onClick = onUndo) {
+                Icon(
+                    imageVector = Icons.Default.Refresh,
+                    contentDescription = "Undo",
+                    tint = DoseyPurple
+                )
             }
         }
     }

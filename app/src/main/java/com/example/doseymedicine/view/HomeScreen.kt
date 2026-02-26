@@ -44,10 +44,16 @@ val SurfaceCardDark = Color(0xFF1E212D)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(viewModel: MedicineViewModel,onNavigateToAdd: () -> Unit ,
-               onNavigateToDetails: (String) -> Unit) {
+fun HomeScreen(
+    viewModel: MedicineViewModel,
+    onNavigateToAdd: () -> Unit ,
+    onNavigateToDetails: (String) -> Unit)
+{
     val medicineList by viewModel.medicines.observeAsState(initial = emptyList())
     var selectedDate by remember { mutableStateOf(Calendar.getInstance().time) }
+
+    val allMedicines by viewModel.medicines.observeAsState(emptyList())
+    val upcomingMeds = allMedicines.filter { !it.taken }
 
     LaunchedEffect(Unit) {
         viewModel.loadMedicines()
@@ -132,7 +138,9 @@ fun HomeScreen(viewModel: MedicineViewModel,onNavigateToAdd: () -> Unit ,
                     val groups = listOf("MORNING", "AFTERNOON", "EVENING")
 
                     groups.forEach { period ->
-                        val filteredMeds = medicineList.filter { getPeriod(it.time) == period }
+                        val filteredMeds = medicineList.filter {
+                            getPeriod(it.time) == period && !it.taken
+                        }
 
                         if (filteredMeds.isNotEmpty()) {
                             item { SectionHeader(period) }

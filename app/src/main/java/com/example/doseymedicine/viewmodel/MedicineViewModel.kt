@@ -112,4 +112,19 @@ fun deleteMedicine(
             }
         }
     }
+
+    fun undoTaken(id: String) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        repo.getMedicineById(id) { med ->
+            if (med != null) {
+                val updatedMed = med.copy(
+                    taken = false,
+                    pillsLeft = med.pillsLeft + 1
+                )
+                updateMedicine(id, updatedMed) { success ->
+                    if (success) loadMedicines()
+                }
+            }
+        }
+    }
 }
