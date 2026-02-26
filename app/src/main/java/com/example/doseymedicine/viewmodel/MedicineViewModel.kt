@@ -1,11 +1,15 @@
 package com.example.doseymedicine.viewmodel
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.doseymedicine.model.MedicineModel
+import com.example.doseymedicine.model.UserProfileModel
 import com.example.doseymedicine.respo.MedicineRepo
 import com.example.doseymedicine.respo.MedicineRepoImpl
+import com.google.firebase.auth.FirebaseAuth
+import androidx.compose.runtime.State
 
 class MedicineViewModel : ViewModel() {
     private val repo: MedicineRepo = MedicineRepoImpl()
@@ -16,6 +20,9 @@ class MedicineViewModel : ViewModel() {
             _medicines.postValue(it)
         }
     }
+
+    private val _userProfile = mutableStateOf(UserProfileModel())
+    val userProfile: State<UserProfileModel> = _userProfile
 
     fun addMedicine(
         name: String,
@@ -89,5 +96,20 @@ fun deleteMedicine(
         callback(success)
     }
 }
+    fun fetchUserProfile() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        repo.getUserProfile(userId) { profile ->
+            if (profile != null) _userProfile.value = profile
+        }
+    }
 
+    fun updateUserProfile(profile: UserProfileModel) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        repo.saveUserProfile(userId, profile) { success ->
+            if (success) {
+                _userProfile.value = profile.copy()
+                fetchUserProfile()
+            }
+        }
+    }
 }

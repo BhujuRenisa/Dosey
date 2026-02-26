@@ -1,6 +1,8 @@
 package com.example.doseymedicine.respo
 
+import androidx.compose.remote.creation.profile.Profile
 import com.example.doseymedicine.model.MedicineModel
+import com.example.doseymedicine.model.UserProfileModel
 
 interface MedicineRepo {
     fun addMedicine(
@@ -32,5 +34,16 @@ fun updateMedicine(
     fun deleteMedicine(
         medicineId: String,
         callback: (Boolean) -> Unit
+    )
+
+    fun saveUserProfile(
+        userId: String,
+        profile: UserProfileModel,
+        callback: (Boolean) -> Unit
+    )
+
+    fun getUserProfile(
+        userId: String,
+        callback: (UserProfileModel?) -> Unit
     )
 }

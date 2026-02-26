@@ -2,18 +2,16 @@ package com.example.doseymedicine.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import com.example.doseymedicine.R
-
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,198 +19,276 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.doseymedicine.ui.theme.DarkText
+import com.example.doseymedicine.model.UserProfileModel
 import com.example.doseymedicine.ui.theme.PrimaryPurple
 import com.example.doseymedicine.viewmodel.MedicineViewModel
 import com.google.firebase.auth.FirebaseAuth
+
 
 @Composable
 fun Profile(
     viewModel: MedicineViewModel,
     onLogout: () -> Unit
 ) {
-
+    val userProfile by viewModel.userProfile
     val medicines by viewModel.medicines.observeAsState(emptyList())
-    val activeMeds = medicines.size
-    val adherence = 92 // you can calculate later
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchUserProfile()
+    }
+
+    // Edit Dialog
+    var showEditDialog by remember { mutableStateOf(false) }
+    var tempBlood by remember { mutableStateOf("") }
+    var tempAllergies by remember { mutableStateOf("") }
+    var tempEmergency by remember { mutableStateOf("") }
 
     val currentUser = FirebaseAuth.getInstance().currentUser
     val userEmail = currentUser?.email ?: "No Email"
-    val userName = currentUser?.displayName ?: "User"
-
-    val gradientBackground = Brush.verticalGradient(
-        colors = listOf(
-            Color(0xFFF3E5F5),
-            Color(0xFFE8F5E9)
-        )
-    )
+    val userName = currentUser?.displayName ?: "Health User"
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(gradientBackground)
+            .background(Brush.verticalGradient(listOf(
+                Color(0xFFFDFCFB),
+                Color(0xFFE2D1F9)
+            ))
+            )
             .padding(horizontal = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        item { Spacer(modifier = Modifier.height(50.dp)) }
 
-        item { Spacer(modifier = Modifier.height(40.dp)) }
-
-        // ⭐ Avatar
         item {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .size(120.dp)
-                    .clip(CircleShape)
-                    .background(Color.White)
-                    .border(3.dp, PrimaryPurple, CircleShape)
-            ) {
-                Icon(
-                    Icons.Default.Person,
-                    contentDescription = null,
-                    tint = PrimaryPurple,
-                    modifier = Modifier.size(55.dp)
-                )
-            }
-        }
-
-        item { Spacer(modifier = Modifier.height(16.dp)) }
-
-        // ⭐ Name
-        item {
-            Text(
-                text = userName,
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
-
-        // ⭐ Email
-        item {
-            Text(
-                text = userEmail,
-                fontSize = 14.sp,
-                color = Color.DarkGray
-            )
-        }
-
-        item { Spacer(modifier = Modifier.height(28.dp)) }
-
-        // ⭐ Stats Card
-        item {
-            Card(
-                shape = RoundedCornerShape(24.dp),
-                elevation = CardDefaults.cardElevation(8.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Row(
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 24.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                        .size(100.dp)
+                        .clip(CircleShape)
+                        .background(Color.White)
+                        .border(2.dp, PrimaryPurple, CircleShape),
+                    contentAlignment = Alignment.Center
                 ) {
-                    ProfileStat(activeMeds.toString(), "Active Meds")
-                    ProfileStat("$adherence%", "Adherence")
+                    Icon(Icons.Default.Person,
+                        contentDescription = null,
+                        tint = PrimaryPurple,
+                        modifier = Modifier.size(50.dp))
+                }
+                Spacer(Modifier.height(12.dp))
+                Text(text = userName,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = DarkBrown)
+
+                Text(text = userEmail,
+                    fontSize = 14.sp,
+                    color = Color.Gray)
+            }
+        }
+
+        item { Spacer(Modifier.height(30.dp)) }
+
+        item {
+            Text("My Current Medications",
+                modifier = Modifier.fillMaxWidth(),
+                fontWeight = FontWeight.Bold, color = DarkBrown)
+
+            Spacer(Modifier.height(12.dp))
+
+            if (medicines.isEmpty()) {
+                Text("No medicines added yet.",
+                    color = Color.Gray,
+                    fontSize = 13.sp)
+            } else {
+                LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    items(medicines.size) { index ->
+                        Card(
+                            colors = CardDefaults.cardColors(
+                                containerColor = PrimaryPurple.copy(alpha = 0.1f)
+                            ),
+                            shape = RoundedCornerShape(16.dp)
+                        ) {
+                            Text(
+                                text = medicines[index].name,
+                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                                color = PrimaryPurple,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
                 }
             }
         }
 
-        item { Spacer(modifier = Modifier.height(28.dp)) }
+        item { Spacer(Modifier.height(30.dp)) }
 
-        // ⭐ Settings Section
         item {
+            Text("Emergency Health Info",
+                modifier = Modifier.fillMaxWidth(),
+                fontWeight = FontWeight.Bold,
+                color = DarkBrown)
+
+            Spacer(Modifier.height(12.dp))
+
             Card(
                 shape = RoundedCornerShape(24.dp),
-                elevation = CardDefaults.cardElevation(6.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.White),
+                elevation = CardDefaults.cardElevation(4.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Column {
+                Column(Modifier.padding(20.dp)) {
+                    HealthRow(Icons.Default.Favorite,
+                        "Blood Type",
+                        userProfile.bloodType.ifBlank { "Not Set" }
+                    )
 
-                    ProfileItem(Icons.Default.Settings, "Account Settings")
-                    Divider()
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp),
+                        color = Color.Gray.copy(alpha = 0.1f))
 
-                    ProfileItem(Icons.Default.Notifications, "Notification Tones")
-                    Divider()
+                    HealthRow(Icons.Default.Warning,
+                        "Allergies",
+                        userProfile.allergies.ifBlank { "None" }
+                    )
 
-                    ProfileItem(Icons.Default.Info, "Privacy Policy")
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp),
+                        color = Color.Gray.copy(alpha = 0.1f)
+                    )
+
+                    HealthRow(Icons.Default.Phone, "Emergency",
+                        userProfile.emergencyContact.ifBlank { "Not Set" }
+                    )
+
+                    TextButton(
+                        onClick = {
+                            tempBlood = userProfile.bloodType
+                            tempAllergies = userProfile.allergies
+                            tempEmergency = if (userProfile.emergencyContact.all { it.isDigit() }) {
+                                userProfile.emergencyContact
+                            } else {
+                                ""
+                            }
+                            showEditDialog = true
+                        },
+                        modifier = Modifier.align(Alignment.End)
+                    ) {
+                        Text("Update Info", color = PrimaryPurple)
+                    }
                 }
             }
         }
 
-        item { Spacer(modifier = Modifier.height(40.dp)) }
+        item { Spacer(Modifier.height(30.dp)) }
 
-        // ⭐ Logout Button
+        // Logout Button
         item {
-            OutlinedButton(
+            Button(
                 onClick = {
                     FirebaseAuth.getInstance().signOut()
                     onLogout()
                 },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(55.dp),
-                shape = RoundedCornerShape(18.dp),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = Color.Red
-                )
+                modifier = Modifier.fillMaxWidth().height(56.dp),
+                shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFEBEE),
+                    contentColor = Color.Red)
             ) {
-                Icon(
-                    painter = painterResource(R.drawable.outline_logout_24),
-                    contentDescription = null)
-                Spacer(modifier = Modifier.width(8.dp))
-                Text("Logout", fontWeight = FontWeight.Bold)
+                Text("Logout Account",
+                    fontWeight = FontWeight.Bold)
             }
         }
+        item { Spacer(Modifier.height(40.dp)) }
+    }
 
-        item { Spacer(modifier = Modifier.height(40.dp)) }
+    // Update Dialog
+    if (showEditDialog) {
+        AlertDialog(
+            onDismissRequest = { showEditDialog = false },
+            containerColor = Color.White,
+            shape = RoundedCornerShape(28.dp),
+            title = { Text("Update Health Profile",
+                fontWeight = FontWeight.Bold,
+                color = DarkBrown)
+                    },
+
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    OutlinedTextField(
+                        value = tempBlood,
+                        onValueChange = { tempBlood = it },
+                        label = { Text("Blood Type") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    OutlinedTextField(
+                        value = tempAllergies,
+                        onValueChange = { tempAllergies = it },
+                        label = { Text("Allergies") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    OutlinedTextField(
+                        value = tempEmergency,
+                        onValueChange = { input ->
+
+                            if (input.isEmpty() || (input.all { it.isDigit() } && input.length <= 10)) {
+                                tempEmergency = input
+                            }
+                        },
+                        label = { Text("Emergency Contact (10 digits)") },
+                        modifier = Modifier.fillMaxWidth(),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        isError = tempEmergency.length != 10 && tempEmergency.isNotEmpty(),
+                        supportingText = {
+                            if (tempEmergency.length != 10 && tempEmergency.isNotEmpty()) {
+                                Text("Must be exactly 10 digits", color = MaterialTheme.colorScheme.error)
+                            }
+                        }
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    enabled = tempEmergency.length == 10,
+                    onClick = {
+                    val updatedProfile = UserProfileModel(tempBlood, tempAllergies, tempEmergency)
+                    viewModel.updateUserProfile(updatedProfile)
+                    showEditDialog = false
+                }) {
+                    Text("Save Changes",
+                        color = if (tempEmergency.length == 10 ) PrimaryPurple else Color.Gray,
+                        fontWeight = FontWeight.Bold)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showEditDialog = false }) {
+                    Text("Cancel",
+                        color = Color.Gray)
+                }
+            }
+        )
     }
 }
 
 @Composable
-fun ProfileStat(value: String, label: String) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+fun HealthRow(icon: ImageVector, label: String, value: String) {
+    Row(verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth()
     ) {
-        Text(
-            text = value,
-            fontSize = 22.sp,
-            fontWeight = FontWeight.Bold,
-            color = PrimaryPurple
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = label,
-            fontSize = 14.sp,
-            color = Color.Gray
-        )
-    }
-}
-
-@Composable
-fun ProfileItem(icon: ImageVector, title: String) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { }
-            .padding(18.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-
-        Icon(
-            icon,
+        Icon(icon,
             contentDescription = null,
-            tint = PrimaryPurple
+            tint = PrimaryPurple,
+            modifier = Modifier.size(20.dp)
         )
+        Spacer(Modifier.width(12.dp))
+        Text(text = label,
+            modifier = Modifier.weight(1f),
+            color = Color.Gray,
+            fontSize = 14.sp)
 
-        Spacer(modifier = Modifier.width(16.dp))
-
-        Text(
-            text = title,
-            fontSize = 16.sp
-        )
+        Text(text = value,
+            fontWeight = FontWeight.Bold,
+            color = DarkBrown)
     }
 }

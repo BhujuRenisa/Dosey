@@ -1,6 +1,7 @@
 package com.example.doseymedicine.respo
 
 import com.example.doseymedicine.model.MedicineModel
+import com.example.doseymedicine.model.UserProfileModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -129,6 +130,41 @@ class MedicineRepoImpl: MedicineRepo {
             .removeValue()
             .addOnCompleteListener {
                 callback(it.isSuccessful)
+            }
+    }
+
+    override fun saveUserProfile(
+        userId: String,
+        profile: UserProfileModel,
+        callback: (Boolean) -> Unit
+    ) {
+        val profileRef = database.child("users")
+            .child(userId)
+            .child("profile")
+
+        profileRef.setValue(profile)
+            .addOnSuccessListener {
+                callback(true)
+            }
+            .addOnFailureListener {
+                callback(false)
+            }
+    }
+    override fun getUserProfile(
+        userId: String,
+        callback: (UserProfileModel?) -> Unit
+    ) {
+        database.child("users").child(userId)
+            .child("profile")
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val snapshot = task.result
+                    val profile = snapshot.getValue(UserProfileModel::class.java)
+                    callback(profile)
+                } else {
+                    callback(null)
+                }
             }
     }
 }
