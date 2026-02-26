@@ -75,4 +75,19 @@ fun updateMedicine(
         }
 
     }
+
+//    delete
+fun deleteMedicine(
+    medicineId: String,
+    callback: (Boolean) -> Unit
+){
+    repo.deleteMedicine(medicineId){
+        success ->
+        if (success){
+            loadMedicines()
+        }
+        callback(success)
+    }
+}
+
 }

@@ -28,4 +28,9 @@ fun updateMedicine(
     updatedMed: MedicineModel,
     callback: (Boolean) -> Unit
 )
+
+    fun deleteMedicine(
+        medicineId: String,
+        callback: (Boolean) -> Unit
+    )
 }

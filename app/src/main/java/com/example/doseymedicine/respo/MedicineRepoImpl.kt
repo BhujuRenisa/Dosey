@@ -117,4 +117,18 @@ class MedicineRepoImpl: MedicineRepo {
                 callback(it.isSuccessful)
             }
     }
+
+    override fun deleteMedicine(
+        medicineId: String,
+        callback: (Boolean) -> Unit
+    ) {
+        val uid =auth.currentUser?.uid ?: return
+        database.child("medicines")
+            .child(uid)
+            .child(medicineId)
+            .removeValue()
+            .addOnCompleteListener {
+                callback(it.isSuccessful)
+            }
+    }
 }
