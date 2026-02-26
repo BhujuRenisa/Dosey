@@ -69,11 +69,12 @@ fun FrequencyCard(
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
-    val backgroundColor = if (isSelected) Color.White else Color.White.copy(alpha = 0.6f)
+    val backgroundColor = if (isSelected) Color.White else Color.White
     val borderColor = if (isSelected) SoftLavender else Color.Transparent
     val textColor = if (isSelected) DarkBrown else DarkBrown.copy(alpha = 0.7f)
 
     Surface(
+        onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
@@ -97,7 +98,7 @@ fun FrequencyCard(
 
             RadioButton(
                 selected = isSelected,
-                onClick = onClick,
+                onClick = null,
                 colors = RadioButtonDefaults.colors(
                     selectedColor = SoftLavender,
                     unselectedColor = DarkBrown.copy(alpha = 0.2f)

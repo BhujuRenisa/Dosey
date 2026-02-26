@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.doseymedicine.ui.theme.DarkBrown
 import com.example.doseymedicine.ui.theme.PrimaryPurple
 
 @Composable
@@ -31,28 +32,27 @@ fun ConfirmationStep(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp)
+            .padding(horizontal = 4.dp)
     ) {
 
-        // ⭐ Hero Header
         Text(
             text = "Review & Confirm",
-            fontSize = 30.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFFF7A1A1)
+            fontSize = 32.sp,
+            fontWeight = FontWeight.Black,
+            color = DarkBrown,
+            letterSpacing = (-0.5).sp
         )
 
         Spacer(modifier = Modifier.height(6.dp))
 
         Text(
             text = "Make sure everything looks correct",
-            fontSize = 15.sp,
-            color = Color.White.copy(alpha = 0.7f)
+            fontSize = 16.sp,
+            color = DarkBrown.copy(alpha = 0.6f)
         )
 
-        Spacer(modifier = Modifier.height(28.dp))
+        Spacer(modifier = Modifier.height(32.dp))
 
-        // ⭐ Premium Glass Card
         Surface(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(32.dp),
@@ -62,32 +62,30 @@ fun ConfirmationStep(
 
             Column {
 
-                // ⭐ Top Accent Bar
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(6.dp)
-                        .background(PrimaryPurple)
+                        .background(SoftLavender)
                 )
 
                 Column(modifier = Modifier.padding(26.dp)) {
 
                     Text(
                         text = name.uppercase(),
-                        fontSize = 26.sp,
+                        fontSize = 28.sp,
                         fontWeight = FontWeight.ExtraBold,
-                        color = Color(0xFF2E2E2E)
+                        color = DarkBrown
                     )
 
                     Spacer(modifier = Modifier.height(20.dp))
 
                     androidx.compose.material3.HorizontalDivider(
-                        color = Color(0xFFF0F0F0)
+                        color = Color(0xFFF5F5F5)
                     )
 
-                    Spacer(modifier = Modifier.height(22.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
 
-                    // Info Grid
                     Row(modifier = Modifier.fillMaxWidth()) {
                         SummaryItem(
                             label = "Frequency",
@@ -101,7 +99,7 @@ fun ConfirmationStep(
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(26.dp))
+                    Spacer(modifier = Modifier.height(28.dp))
 
                     Row(modifier = Modifier.fillMaxWidth()) {
                         SummaryItem(
@@ -129,12 +127,11 @@ fun SummaryItem(
 ) {
 
     Column(modifier = modifier) {
-
         Text(
             text = label.uppercase(),
             fontSize = 11.sp,
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF9E9E9E),
+            color = DarkBrown.copy(alpha= 0.4f),
             letterSpacing = 1.sp
         )
 
@@ -142,9 +139,9 @@ fun SummaryItem(
 
         Text(
             text = value,
-            fontSize = 17.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = Color(0xFF2E2E2E)
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            color = DarkBrown
         )
     }
 }

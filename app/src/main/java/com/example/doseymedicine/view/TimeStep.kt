@@ -56,32 +56,33 @@ fun TimeStep(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(20.dp)
+            .padding(horizontal = 4.dp)
+//            .padding(20.dp)
     ) {
 
         Text(
             "When would you like to start?",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.White
+            color = Color(0xFF3E2723)
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // --- Date Card ---
+        //Date Card
         ModernSelectionCard(
             title = "Start Date",
-            value = startDate,
+            value = if (startDate.isEmpty()) "Select Date" else startDate,
             icon = R.drawable.outline_date_range_24,
             onClick = { showDatePicker = true }
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // --- Time Card ---
+        // Time Card
         ModernSelectionCard(
             title = "Reminder Time",
-            value = reminderTime,
+            value = if (reminderTime.isEmpty()) "08:00 AM" else reminderTime,
             icon = R.drawable.outline_circle_notifications_24,
             onClick = { showTimePicker = true }
         )
@@ -120,8 +121,8 @@ fun ModernSelectionCard(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() },
-        shape = RoundedCornerShape(24.dp),
-        color = Color.White.copy(alpha = 0.12f),
+        shape = RoundedCornerShape(28.dp),
+        color = Color.White,
         border = BorderStroke(1.dp, Color.White.copy(alpha = 0.15f))
     ) {
         Row(
@@ -132,13 +133,14 @@ fun ModernSelectionCard(
             Box(
                 modifier = Modifier
                     .size(52.dp)
-                    .background(Color.White.copy(alpha = 0.1f), RoundedCornerShape(16.dp)),
+                    .background(Color(0xFFBA68C8).copy(alpha = 0.1f),
+                        RoundedCornerShape(16.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     painter = painterResource(icon),
                     contentDescription = null,
-                    tint = Color.White,
+                    tint = Color(0xFFBA68C8),
                     modifier = Modifier.size(24.dp)
                 )
             }
@@ -149,16 +151,24 @@ fun ModernSelectionCard(
                 Text(
                     title,
                     fontSize = 13.sp,
-                    color = Color.Blue.copy(alpha = 0.6f),
+                    color = Color(0xFF3E2723).copy(alpha = 0.5f),
                     fontWeight = FontWeight.Normal
                 )
                 Text(
                     value,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White
+                    color = Color(0xFF3E2723)
                 )
             }
+            Spacer(modifier = Modifier.weight(1f))
+
+            Icon(
+                painter = painterResource(id = R.drawable.outline_add_24),
+                contentDescription = null,
+                tint = DarkBrown.copy(alpha = 0.2f),
+                modifier = Modifier.size(20.dp)
+            )
         }
     }
 }

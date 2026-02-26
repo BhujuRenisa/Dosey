@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.doseymedicine.ui.theme.PrimaryPurple
 import com.example.doseymedicine.R
-
+import com.example.doseymedicine.ui.theme.DarkBrown
 
 
 @Composable
@@ -41,19 +41,19 @@ fun InventoryStep(
     onThresholdChange: (Int) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp)) {
-        // Hero Header
+
         Text(
-            text = "Inventory Settings",
-            fontSize = 28.sp, // Large, confident font size
+            text = "Your Pills ",
+            fontSize = 28.sp,
             fontWeight = FontWeight.ExtraBold,
-            color = Color.White,
+            color = DarkBrown,
             letterSpacing = (-0.5).sp
         )
 
         Text(
             text = "Keep track of your stock so you never run out.",
-            color = Color.White.copy(alpha = 0.6f),
-            fontSize = 15.sp, // Smaller, lighter subtext
+            color = DarkBrown.copy(alpha = 0.3f),
+            fontSize = 18.sp,
             lineHeight = 20.sp
         )
 
@@ -82,12 +82,12 @@ fun InventoryStep(
 @Composable
 fun InventoryLabel(text: String) {
     Text(
-        text = text.uppercase(), // All caps for labels is very "app-like"
+        text = text.uppercase(),
         fontSize = 12.sp,
         fontWeight = FontWeight.Bold,
-        color = Color.White.copy(alpha = 0.5f),
+        color = DarkBrown.copy(alpha = 0.5f),
         letterSpacing = 1.sp,
-        modifier = Modifier.padding(start = 8.dp, bottom = 8.dp)
+        modifier = Modifier.padding(start = 12.dp, bottom = 8.dp)
     )
 }
 @Composable
@@ -99,7 +99,7 @@ fun PlusMinusSelector(
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(28.dp),
-        color = Color.White.copy(alpha = 0.1f),
+        color = Color.White,
         border = BorderStroke(1.dp, Color.White.copy(alpha = 0.15f))
     ) {
         Row(
@@ -107,7 +107,7 @@ fun PlusMinusSelector(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            // Minus Button - Subtle
+            // Minus Button
             SelectorCircleButton(
                 isPlus = false,
                 onClick = { if (value > 0) onValueChange(value - 1) }
@@ -115,14 +115,15 @@ fun PlusMinusSelector(
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
                     text = value.toString(),
-                    fontSize = 32.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    color = Color.White
+                    fontSize = 36.sp,
+                    fontWeight = FontWeight.Black,
+                    color = DarkBrown
                 )
                 Text(
                     text = unit,
                     fontSize = 14.sp,
-                    color = Color.White.copy(alpha = 0.6f)
+                    fontWeight = FontWeight.Medium,
+                    color = DarkBrown.copy(alpha = 0.5f)
                 )
             }
 
@@ -138,19 +139,20 @@ fun SelectorCircleButton(
     isPlus: Boolean,
     onClick: () -> Unit
 ) {
+    val backgroundColor = if (isPlus) SoftLavender else SoftLavender.copy(alpha = 0.15f)
+    val iconTint = if (isPlus) Color.White else SoftLavender
+
     Surface(
         modifier = Modifier.size(56.dp),
         shape = CircleShape,
-        // Plus is Solid White, Minus is Translucent Glass
-        color = if (isPlus) Color.White else Color.White.copy(alpha = 0.2f),
-        shadowElevation = if (isPlus) 8.dp else 0.dp
+        color = backgroundColor,
+        shadowElevation = if (isPlus) 6.dp else 0.dp
     ) {
         IconButton(onClick = onClick) {
             Icon(
-                imageVector = if (isPlus) Icons.Default.Add
-                else Icons.Default.Remove,
+                imageVector = if (isPlus) Icons.Default.Add else Icons.Default.Remove,
                 contentDescription = null,
-                tint = if (isPlus) Color(0xFF6A5AE0) else Color.White,
+                tint = iconTint,
                 modifier = Modifier.size(28.dp)
             )
         }
