@@ -117,7 +117,7 @@ fun Dashboard(viewModel: MedicineViewModel) {
                                 onNavigateToAdd = { isAddingMedicine = true },
                                 onNavigateToDetails = { id -> selectedMedicineId = id }
                             )
-                            1 -> History()
+                            1 -> History(viewModel = viewModel)
                             2 -> Profile(
                                 viewModel = viewModel,
                                 onLogout = {
