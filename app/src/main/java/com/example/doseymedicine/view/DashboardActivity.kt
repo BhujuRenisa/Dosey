@@ -1,5 +1,7 @@
 package com.example.doseymedicine.view
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -23,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -55,6 +58,8 @@ fun Dashboard(viewModel: MedicineViewModel) {
 
     var isAddingMedicine by remember { mutableStateOf(false) }
     var selectedMedicineId by remember { mutableStateOf<String?>(null) }
+
+    val context = LocalContext.current
 
     val gradientBackground = Brush.verticalGradient(
         colors = listOf(
@@ -122,6 +127,13 @@ fun Dashboard(viewModel: MedicineViewModel) {
                                 viewModel = viewModel,
                                 onLogout = {
                                     FirebaseAuth.getInstance().signOut()
+
+                                    val intent = Intent (
+                                        context, LoginScreen::class.java).apply{
+                                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                    }
+                                context.startActivity(intent)
+                                    (context as? Activity)?.finish()
                                 }
                             )
                         }
