@@ -170,11 +170,21 @@ fun HomeScreen(
 @Composable
 fun HeaderSection(name:String,
                   remaining: Int) {
+
+
+    val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+
+    val greeting = when (hour) {
+        in 4..11 -> "Good Morning"
+        in 12..16 -> "Good Afternoon"
+        else -> "Good Evening"
+    }
+
     Column(modifier = Modifier.padding(horizontal = 24.dp,
         vertical = 16.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("Good Morning, ",
+            Text("$greeting, ",
                 fontSize = 26.sp,
                 color = doseyText,
                 fontWeight = FontWeight.Light)
