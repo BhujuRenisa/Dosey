@@ -36,6 +36,7 @@ import com.example.doseymedicine.ui.theme.MutedText
 import com.example.doseymedicine.ui.theme.Purple80
 import com.example.doseymedicine.ui.theme.doseyText
 import com.example.doseymedicine.viewmodel.MedicineViewModel
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -49,6 +50,9 @@ fun HomeScreen(
     onNavigateToAdd: () -> Unit ,
     onNavigateToDetails: (String) -> Unit)
 {
+    val currentUser = FirebaseAuth.getInstance().currentUser
+    val firstName = currentUser?.displayName?.split(" ")?.get(0) ?: "User"
+
     val medicineList by viewModel.medicines.observeAsState(initial = emptyList())
     var selectedDate by remember { mutableStateOf(Calendar.getInstance().time) }
 
@@ -121,7 +125,9 @@ fun HomeScreen(
         { padding ->
             Column(modifier = Modifier.padding(padding).fillMaxSize()) {
 
-                HeaderSection(medicineList.count { !it.taken })
+                HeaderSection(
+                    name = firstName,
+                    medicineList.count { !it.taken })
 
                 FullFeatureCalendar(
                     selectedDate = selectedDate,
@@ -162,15 +168,30 @@ fun HomeScreen(
 }
 
 @Composable
-fun HeaderSection(remaining: Int) {
-    Column(modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp)) {
+fun HeaderSection(name:String,
+                  remaining: Int) {
+    Column(modifier = Modifier.padding(horizontal = 24.dp,
+        vertical = 16.dp)
+    ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("Good Morning, ", fontSize = 26.sp, color = doseyText, fontWeight = FontWeight.Light)
-            Text("Alex.", fontSize = 26.sp, color = DoseyPurple, fontWeight = FontWeight.Bold)
+            Text("Good Morning, ",
+                fontSize = 26.sp,
+                color = doseyText,
+                fontWeight = FontWeight.Light)
+
+            Text("$name",
+                fontSize = 26.sp,
+                color = DoseyPurple,
+                fontWeight = FontWeight.Bold)
         }
-        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 4.dp)) {
-            Box(modifier = Modifier.size(6.dp).background(DoseyPurple, CircleShape))
-            Text("  You have $remaining meds left today.", color = MutedText, fontSize = 14.sp)
+        Row(verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(top = 4.dp)
+        ) {
+            Box(modifier = Modifier.size(6.dp)
+                .background(DoseyPurple, CircleShape)
+            )
+            Text("  You have $remaining meds left today.",
+                color = MutedText, fontSize = 18.sp)
         }
     }
 }
