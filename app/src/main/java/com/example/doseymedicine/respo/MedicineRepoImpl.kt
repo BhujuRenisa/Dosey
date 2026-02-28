@@ -167,4 +167,33 @@ class MedicineRepoImpl: MedicineRepo {
                 }
             }
     }
+
+    override fun getUserData(
+        userId: String,
+        callback: (com.example.doseymedicine.model.DoseyModel?) -> Unit
+    ) {
+        database.child("Users").child(userId)
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val snapshot = task.result
+                    val user = snapshot.getValue(com.example.doseymedicine.model.DoseyModel::class.java)
+                    callback(user)
+                } else {
+                    callback(null)
+                }
+            }
+    }
+
+    override fun updateUserData(
+        userId: String,
+        model: com.example.doseymedicine.model.DoseyModel,
+        callback: (Boolean) -> Unit
+    ) {
+        database.child("Users").child(userId)
+            .updateChildren(model.toMap())
+            .addOnCompleteListener {
+                callback(it.isSuccessful)
+            }
+    }
 }

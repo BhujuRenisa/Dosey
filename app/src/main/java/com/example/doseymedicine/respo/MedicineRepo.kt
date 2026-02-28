@@ -46,4 +46,15 @@ fun updateMedicine(
         userId: String,
         callback: (UserProfileModel?) -> Unit
     )
+
+    fun getUserData(
+        userId: String,
+        callback: (com.example.doseymedicine.model.DoseyModel?) -> Unit
+    )
+
+    fun updateUserData(
+        userId: String,
+        model: com.example.doseymedicine.model.DoseyModel,
+        callback: (Boolean) -> Unit
+    )
 }

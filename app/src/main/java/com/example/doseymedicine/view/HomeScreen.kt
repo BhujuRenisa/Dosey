@@ -50,9 +50,7 @@ fun HomeScreen(
     onNavigateToAdd: () -> Unit ,
     onNavigateToDetails: (String) -> Unit)
 {
-    val currentUser = FirebaseAuth.getInstance().currentUser
-    val firstName = currentUser?.displayName?.split(" ")?.get(0) ?: "User"
-
+    val userData by viewModel.userData
     val medicineList by viewModel.medicines.observeAsState(initial = emptyList())
     var selectedDate by remember { mutableStateOf(Calendar.getInstance().time) }
 
@@ -61,6 +59,7 @@ fun HomeScreen(
 
     LaunchedEffect(Unit) {
         viewModel.loadMedicines()
+        viewModel.fetchUserData()
     }
     Box(
         modifier = Modifier
@@ -126,7 +125,7 @@ fun HomeScreen(
             Column(modifier = Modifier.padding(padding).fillMaxSize()) {
 
                 HeaderSection(
-                    name = firstName,
+                    name = if (userData.firstName.isNotBlank()) userData.firstName else "User",
                     medicineList.count { !it.taken })
 
                 FullFeatureCalendar(

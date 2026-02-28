@@ -37,10 +37,12 @@ fun Profile(
     onLogout: () -> Unit
 ) {
     val userProfile by viewModel.userProfile
+    val userData by viewModel.userData
     val medicines by viewModel.medicines.observeAsState(emptyList())
 
     LaunchedEffect(Unit) {
         viewModel.fetchUserProfile()
+        viewModel.fetchUserData()
     }
 
     // Edit Dialog
@@ -48,10 +50,15 @@ fun Profile(
     var tempBlood by remember { mutableStateOf("") }
     var tempAllergies by remember { mutableStateOf("") }
     var tempEmergency by remember { mutableStateOf("") }
+    var tempFirstName by remember { mutableStateOf("") }
+    var tempLastName by remember { mutableStateOf("") }
 
-    val currentUser = FirebaseAuth.getInstance().currentUser
-    val userEmail = currentUser?.email ?: "No Email"
-    val userName = currentUser?.displayName ?: "Health User"
+    val userEmail = userData.email.ifBlank { "No Email" }
+    val userName = if (userData.firstName.isNotBlank() || userData.lastName.isNotBlank()) {
+        "${userData.firstName} ${userData.lastName}".trim()
+    } else {
+        "Health User"
+    }
 
     LazyColumn(
         modifier = Modifier
@@ -167,6 +174,8 @@ fun Profile(
 
                     TextButton(
                         onClick = {
+                            tempFirstName = userData.firstName
+                            tempLastName = userData.lastName
                             tempBlood = userProfile.bloodType
                             tempAllergies = userProfile.allergies
                             tempEmergency = if (userProfile.emergencyContact.all { it.isDigit() }) {
@@ -221,6 +230,18 @@ fun Profile(
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     OutlinedTextField(
+                        value = tempFirstName,
+                        onValueChange = { tempFirstName = it },
+                        label = { Text("First Name") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    OutlinedTextField(
+                        value = tempLastName,
+                        onValueChange = { tempLastName = it },
+                        label = { Text("Last Name") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    OutlinedTextField(
                         value = tempBlood,
                         onValueChange = { tempBlood = it },
                         label = { Text("Blood Type") },
@@ -254,14 +275,15 @@ fun Profile(
             },
             confirmButton = {
                 TextButton(
-                    enabled = tempEmergency.length == 10,
+                    enabled = tempEmergency.length == 10 && tempFirstName.isNotBlank(),
                     onClick = {
                     val updatedProfile = UserProfileModel(tempBlood, tempAllergies, tempEmergency)
                     viewModel.updateUserProfile(updatedProfile)
+                    viewModel.updateUserData(tempFirstName, tempLastName) { }
                     showEditDialog = false
                 }) {
                     Text("Save Changes",
-                        color = if (tempEmergency.length == 10 ) PrimaryPurple else Color.Gray,
+                        color = if (tempEmergency.length == 10 && tempFirstName.isNotBlank()) PrimaryPurple else Color.Gray,
                         fontWeight = FontWeight.Bold)
                 }
             },

@@ -24,6 +24,9 @@ class MedicineViewModel : ViewModel() {
     private val _userProfile = mutableStateOf(UserProfileModel())
     val userProfile: State<UserProfileModel> = _userProfile
 
+    private val _userData = mutableStateOf(com.example.doseymedicine.model.DoseyModel())
+    val userData: State<com.example.doseymedicine.model.DoseyModel> = _userData
+
     fun addMedicine(
         name: String,
         desc: String,
@@ -110,6 +113,25 @@ fun deleteMedicine(
                 _userProfile.value = profile.copy()
                 fetchUserProfile()
             }
+        }
+    }
+
+    fun fetchUserData() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        repo.getUserData(userId) { user ->
+            if (user != null) _userData.value = user
+        }
+    }
+
+    fun updateUserData(firstName: String, lastName: String, callback: (Boolean) -> Unit) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val currentUserData = _userData.value
+        val updatedUserData = currentUserData.copy(firstName = firstName, lastName = lastName)
+        repo.updateUserData(userId, updatedUserData) { success ->
+            if (success) {
+                _userData.value = updatedUserData
+            }
+            callback(success)
         }
     }
 
