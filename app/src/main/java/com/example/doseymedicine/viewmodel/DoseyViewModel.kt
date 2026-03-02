@@ -7,9 +7,10 @@ import com.example.doseymedicine.respo.AuthRepoImpl
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.State
 
-class DoseyViewModel(authRepoImpl: AuthRepoImpl) : ViewModel() {
+class DoseyViewModel(
+    private val repo: AuthRepo
+) : ViewModel() {
 
-    private val repo: AuthRepo = AuthRepoImpl()
     private val _userData = mutableStateOf<DoseyModel?>(null)
     val userData: State<DoseyModel?> = _userData
 
@@ -20,7 +21,6 @@ class DoseyViewModel(authRepoImpl: AuthRepoImpl) : ViewModel() {
             }
         }
     }
-
 
     fun login(
         email: String,

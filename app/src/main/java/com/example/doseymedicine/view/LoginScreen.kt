@@ -59,6 +59,9 @@ import com.example.doseymedicine.view.DoseyRegister
 import com.example.doseymedicine.viewmodel.DoseyViewModel
 import com.example.doseymedicine.view.ForgotPassword
 
+//for testing
+import androidx.compose.ui.platform.testTag
+
 class LoginScreen : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -153,6 +156,7 @@ fun DoseyLoginBody() {
                     .fillMaxWidth()
                     .height(60.dp)
                     .padding(horizontal = 24.dp)
+                    .testTag("emailField") //TESTINGgggg
             )
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -172,7 +176,9 @@ fun DoseyLoginBody() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp)
-                    .padding(horizontal = 24.dp),
+                    .padding(horizontal = 24.dp)
+                .testTag("passwordField"), //TESTING GGGGG
+
                 visualTransformation = if (visibility) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
                     IconButton (onClick = { visibility = !visibility }) {
@@ -226,7 +232,9 @@ fun DoseyLoginBody() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp)
-                    .height(60.dp),
+                    .height(60.dp)
+                    .testTag("loginButton"), //TESTING GGG
+
                 shape = RoundedCornerShape(30.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent

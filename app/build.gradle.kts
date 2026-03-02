@@ -1,3 +1,5 @@
+//import org.gradle.kotlin.dsl.androidTestImplementation
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -80,6 +82,13 @@ dependencies { // <--- THIS IS THE ONLY LOCATION FOR THIS BLOCK
     implementation(libs.androidx.compose.runtime.livedata)
     implementation("androidx.compose.material:material-icons-extended:1.7.0")
 
+//    testing
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.mockito:mockito-core:5.5.0")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
+    androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
 
 
 }

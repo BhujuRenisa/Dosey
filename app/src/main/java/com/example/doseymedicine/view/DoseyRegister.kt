@@ -62,6 +62,9 @@ import com.example.doseymedicine.ui.theme.SoftPurple
 import com.example.doseymedicine.ui.theme.DarkText
 import com.example.doseymedicine.ui.theme.White
 
+//Testing
+import androidx.compose.ui.platform.testTag
+
 class DoseyRegister : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,9 +76,11 @@ class DoseyRegister : ComponentActivity() {
 }
 
 @Composable
-fun RegisterBody(){
+fun RegisterBody(
+    viewModel: DoseyViewModel = DoseyViewModel(AuthRepoImpl())
+){
 
-    val viewModel = remember { DoseyViewModel(AuthRepoImpl()) }
+//    val viewModel = remember { DoseyViewModel(AuthRepoImpl()) }
 
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
@@ -161,7 +166,7 @@ fun RegisterBody(){
                     cursorColor = PrimaryPurple
                 ),
                 shape = RoundedCornerShape(16.dp),
-                modifier = fieldModifier
+                modifier = fieldModifier.testTag("firstName")    //TESTINGG
             )
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -178,7 +183,7 @@ fun RegisterBody(){
                     cursorColor = PrimaryPurple
                 ),
                 shape = RoundedCornerShape(16.dp),
-                modifier = fieldModifier
+                modifier = fieldModifier.testTag("lastName")  //TESTINGGG
             )
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -195,7 +200,7 @@ fun RegisterBody(){
                     cursorColor = PrimaryPurple
                 ),
                 shape = RoundedCornerShape(16.dp),
-                modifier = fieldModifier
+                modifier = fieldModifier.testTag("email")  //TESTINGGG
             )
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -212,7 +217,7 @@ fun RegisterBody(){
                     cursorColor = PrimaryPurple
                 ),
                 shape = RoundedCornerShape(16.dp),
-                modifier = fieldModifier,
+                modifier = fieldModifier.testTag("password") ,    //TESTINGGGG
                 visualTransformation = if (visibility) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
                     IconButton (onClick = { visibility = !visibility }) {
@@ -239,6 +244,7 @@ fun RegisterBody(){
                 Checkbox(
                     checked = checkbox,
                     onCheckedChange = { checkbox = it },
+                    modifier = Modifier.testTag("termsCheckbox"),   //TESTINGGG
                     colors = CheckboxDefaults.colors(
                         checkmarkColor =White,
                         checkedColor = PrimaryPurple
@@ -285,7 +291,8 @@ fun RegisterBody(){
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(60.dp),
+                    .height(60.dp)
+                    .testTag("registerButton"), //TESTINGGG
                 shape = RoundedCornerShape(30.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                 contentPadding = PaddingValues()
