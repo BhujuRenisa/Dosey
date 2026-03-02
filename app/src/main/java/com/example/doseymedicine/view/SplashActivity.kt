@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.doseymedicine.R
 import com.example.doseymedicine.ui.theme.PrimaryPurple
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.delay
 
 class SplashActivity : ComponentActivity() {
@@ -47,7 +48,12 @@ fun DoseySplashScreen() {
     LaunchedEffect(key1 = true) {
         startAnimation = true
         delay(3000)
-        context.startActivity(Intent(context, LoginScreen::class.java))
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        if (currentUser != null) {
+            context.startActivity(Intent(context, DashboardActivity::class.java))
+        } else {
+            context.startActivity(Intent(context, LoginScreen::class.java))
+        }
         (context as ComponentActivity).finish()
     }
 

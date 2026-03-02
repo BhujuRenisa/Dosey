@@ -61,8 +61,13 @@ dependencies { // <--- THIS IS THE ONLY LOCATION FOR THIS BLOCK
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
-
-    // TESTING LIBRARIES
+    implementation(libs.androidx.compose.runtime.livedata)
+    implementation(libs.androidx.compose.remote.creation.core)
+    implementation("androidx.compose.foundation:foundation")
+    implementation(libs.androidx.compose.runtime)
+    implementation(libs.androidx.material3)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.compose.foundation)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -71,6 +76,9 @@ dependencies { // <--- THIS IS THE ONLY LOCATION FOR THIS BLOCK
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.compose.runtime.livedata)
+    implementation("androidx.compose.material:material-icons-extended:1.7.0")
 
 
 

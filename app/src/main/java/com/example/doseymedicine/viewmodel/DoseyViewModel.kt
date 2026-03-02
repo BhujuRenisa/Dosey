@@ -10,7 +10,6 @@ import androidx.compose.runtime.State
 class DoseyViewModel(authRepoImpl: AuthRepoImpl) : ViewModel() {
 
     private val repo: AuthRepo = AuthRepoImpl()
-
     private val _userData = mutableStateOf<DoseyModel?>(null)
     val userData: State<DoseyModel?> = _userData
 

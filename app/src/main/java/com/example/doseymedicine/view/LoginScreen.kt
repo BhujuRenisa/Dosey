@@ -62,12 +62,6 @@ import com.example.doseymedicine.view.ForgotPassword
 class LoginScreen : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        val auth = com.google.firebase.auth.FirebaseAuth.getInstance()
-//        if (auth.currentUser != null) {
-//            startActivity(Intent(this, DashboardActivity::class.java))
-//            finish()
-//            return
-//        }
         enableEdgeToEdge()
         setContent {
             DoseyLoginBody()

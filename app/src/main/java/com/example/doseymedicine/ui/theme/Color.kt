@@ -12,5 +12,10 @@ val Pink40 = Color(0xFF7D5260)
 val White = Color(0xE9FFE8F5)
 val PrimaryPurple = Color(0xFF6A1B9A)
 val SoftPurple = Color(0xFFE1BEE7)
-val DarkText = Color(0xFF424242)
-val BackgroundGray = Color(0xFFF2F4F7)
+val DarkText = Color(0xFF1A1C1E)
+val DoseyPurple = Color(0xFF565E83)
+val MutedText = Color(0xFF6B6E7B)
+
+val doseyText= Color(0xFF001F3F)
+val DarkBrown= Color(0xFF3E2723)
+
